@@ -1,0 +1,19 @@
+{
+  "time_window": {
+    "Ctrl+P": "Running",
+    "Ctrl+O": "Walking"
+  },
+  "point_activity": {
+    "P": "StepLeft",
+    "Q": "StepRight",
+    "W": "StepRight",
+    "E": "StepRight",
+    "R": "StepRight",
+    "T": "StepRight",
+    "Z": "StepRight",
+    "U": "StepRight",
+    "I": "StepRight",
+    "O": "StepRight",
+    "A": "StepRight"
+  }
+}

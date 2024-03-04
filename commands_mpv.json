@@ -1,0 +1,11 @@
+{
+  "SPACE": ["cycle", "pause"],
+  ".": "frame-step",
+  ",": "frame-back-step",
+  "+": ["add", "video-zoom", "0.1"],
+  "-": ["add", "video-zoom", "-0.1"],
+  "up": ["add", "video-pan-y", "0.1"],
+  "right": ["add", "video-pan-x", "-0.1"],
+  "left": ["add", "video-pan-x", "0.1"],
+  "down": ["add", "video-pan-y", "-0.1"]
+}
