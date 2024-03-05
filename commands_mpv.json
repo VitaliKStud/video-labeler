@@ -1,11 +1,16 @@
 {
   "SPACE": ["cycle", "pause"],
+  "right": "frame-step",
+  "left": "frame-back-step",
+  "up": ["multiply", "speed", "1.1"],
+  "down": ["multiply", "speed", "1/1.1"],
   ".": "frame-step",
   ",": "frame-back-step",
   "+": ["add", "video-zoom", "0.1"],
   "-": ["add", "video-zoom", "-0.1"],
-  "up": ["add", "video-pan-y", "0.1"],
-  "right": ["add", "video-pan-x", "-0.1"],
-  "left": ["add", "video-pan-x", "0.1"],
-  "down": ["add", "video-pan-y", "-0.1"]
+  "Shift+up": ["add", "video-pan-y", "0.1"],
+  "Shift+right": ["add", "video-pan-x", "-0.1"],
+  "Shift+left": ["add", "video-pan-x", "0.1"],
+  "Shift+down": ["add", "video-pan-y", "-0.1"],
+  "BACKSPACE": ["set", "speed", "1.0"]
 }
