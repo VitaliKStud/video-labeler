@@ -69,44 +69,11 @@ class Labeler(QMainWindow):
         self.scroll_vis = self.layout.scroll_vis
         self.layout_vis = self.layout.layout_vis
 
-        self.label_vis_2 = self.layout.label_vis_2
-        self.scroll_vis_2 = self.layout.scroll_vis_2
-        self.layout_vis_2 = self.layout.layout_vis_2
-
         self.splitter_v = self.layout.splitter_v
         self.splitter_h = self.layout.splitter_h
         # noinspection PyUnresolvedReferences
-        self.splitter_h.splitterMoved.connect(self.__update_size_of_table)
+        self.splitter_h.splitterMoved.connect(self.mouse_event.update_size_of_table)
 
-        # Testing the labels
-        self.__create_labels()
-        # self.layout.create_layout()
-
-    def __create_labels(self):
-        with open('label_shortcuts.json', 'r') as file:
-            shortcuts = json.load(file)
-
-        for act_type in shortcuts:
-            for idx, value in enumerate(shortcuts[act_type].items()):
-                # shortcut = value[0]
-                label_value = value[1]
-                label = QLabel(label_value)
-                self.layout_vis_2.addWidget(label, idx, 1)
-
-    def __update_size_of_table(self):
-        """
-        Update the sizes of widgets based on the size of the first element in the splitter.
-        """
-        video_table_size = int(self.splitter_h.sizes()[0] * 0.8)
-        data_table_size = int(self.splitter_h.sizes()[2] * 0.95)
-        columns_videos = self.video_table.columnCount()
-        columns_data = self.data_table.columnCount()
-        video_table_size = video_table_size // columns_videos
-        data_table_size = data_table_size // columns_data
-        for column in range(columns_videos):
-            self.video_table.setColumnWidth(column, video_table_size)
-        for column in range(columns_data):
-            self.data_table.setColumnWidth(column, data_table_size)
 
     def commands_mpv(self):
         """
@@ -217,6 +184,12 @@ class Labeler(QMainWindow):
         # [current_row_count, shortcut_keys, "#333333", "darkred", list(data)]
         # len_logging = len(self.logging_activity)
 
+        # Clearing the layout before readding widgets
+        for i in reversed(range(self.layout_vis.count())):
+            widgetItem = self.layout_vis.itemAt(i)
+            if widgetItem is not None:
+                self.layout_vis.removeWidget(widgetItem.widget())
+
         for idx, activity in enumerate(self.logging_activity):
             act_row = activity[0]
             act_key = activity[1]
@@ -230,17 +203,14 @@ class Labeler(QMainWindow):
             label.setStyleSheet(f"background-color: {act_bg_color}; border: 2px solid {act_border_color};")
             self.layout_vis.addWidget(label, idx, 1)
 
-        len_logging = len(self.logging_activity)
         counter = 0
-        while len_logging > 12 and counter < 12:
-            len_logging = len(self.logging_activity)
-            for idx, logg in reversed(list(enumerate(self.logging_activity))):
+        while len(self.logging_activity) > 12 and counter < 13:
+            for idx, logg in enumerate(self.logging_activity):
                 if logg[3] == "darkgreen":
                     self.logging_activity.pop(idx)
-                    len_logging = len(self.logging_activity)
-                else:
-                    pass
-                counter += 1
+                    break
+            counter += 1
+
 
 
     def __get_saved_time_window(self, shortcut_keys):
@@ -336,10 +306,6 @@ class Labeler(QMainWindow):
             if value is not None:
                 self.playtime.setText(f"{value:.3f}")
                 self.__slider_time_change(value)
-                # self.color_change_values(value)
-                # self.player.register_message_handler()
-                # frame = self.player.frame
-                # print(frame)
             else:
                 self.playtime.setText("NaN")
 
@@ -381,8 +347,8 @@ class Layout:
     def create_video_table(self):
         video_table = QTableWidget(self.labeler)
         video_table.setRowCount(0)
-        video_table.setColumnCount(2)
-        video_table.setHorizontalHeaderLabels(["Video", "Labeled"])
+        video_table.setColumnCount(1)
+        video_table.setHorizontalHeaderLabels(["Video"])
 
         scroll_video_table = QScrollArea(self.labeler)
         scroll_video_table.setWidgetResizable(True)
@@ -435,10 +401,6 @@ class Layout:
         splitter_v.addWidget(self.scroll_video_table)
         splitter_v.addWidget(self.scroll_vis)
 
-        # splitter_v2 = QSplitter(Qt.Vertical)
-        # splitter_v2.addWidget(self.scroll_data_table)
-        # splitter_v2.addWidget(self.scroll_vis_2)
-
         splitter_h = QSplitter(Qt.Horizontal)
         splitter_h.addWidget(splitter_v)
         splitter_h.addWidget(self.video_widget)
@@ -462,15 +424,6 @@ class Layout:
 
         )
 
-        # splitter_v2.setSizes(
-        #     [
-        #         int(height * 0.8),
-        #         int(height * 0.2)
-        #     ]
-        #
-        # )
-
-        # Set the splitter as the central widget of the main window
         self.labeler.setCentralWidget(splitter_h)
 
         return splitter_h, splitter_v
@@ -542,6 +495,21 @@ class MouseEventHandler:
         self.labeler.time_slider.valueChanged.emit(value)
         seek_time = self.labeler.time_slider.value() / 1000 * self.labeler.player.duration
         self.labeler.player.command('seek', seek_time, 'absolute')
+
+    def update_size_of_table(self):
+        """
+        Update the sizes of widgets based on the size of the first element in the splitter.
+        """
+        video_table_size = int(self.labeler.splitter_h.sizes()[0] * 0.8)
+        data_table_size = int(self.labeler.splitter_h.sizes()[2] * 0.95)
+        columns_videos = self.labeler.video_table.columnCount()
+        columns_data = self.labeler.data_table.columnCount()
+        video_table_size = video_table_size // columns_videos
+        data_table_size = data_table_size // columns_data
+        for column in range(columns_videos):
+            self.labeler.video_table.setColumnWidth(column, video_table_size)
+        for column in range(columns_data):
+            self.labeler.data_table.setColumnWidth(column, data_table_size)
 
 
 locale.setlocale(locale.LC_NUMERIC, 'C')

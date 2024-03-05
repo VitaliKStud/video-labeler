@@ -1,7 +1,9 @@
 {
   "time_window": {
-    "Ctrl+P": "Running",
-    "Ctrl+O": "Walking"
+    "Ctrl+Q": "Running",
+    "Ctrl+W": "Running",
+    "Ctrl+E": "Running",
+    "Ctrl+R": "Walking"
   },
   "point_activity": {
     "P": "StepLeft",
