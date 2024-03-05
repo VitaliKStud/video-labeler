@@ -3,5 +3,6 @@
   "CTRL+S": "save_data_table",
   "S": "sort_table",
   "dark_amber.xml": "style",
-  "1600:800": "width_height"
+  "1600:800": "width_height",
+  "12": "log_max"
 }

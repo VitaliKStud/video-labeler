@@ -5,7 +5,7 @@ import locale
 import mpv
 import csv
 from PyQt5.QtWidgets import QTableWidget, QMainWindow, QLabel, QWidget, QGridLayout, QScrollArea, QSlider, QStyle, \
-    QShortcut, QTableWidgetItem, QApplication, QSplitter, QVBoxLayout, QAbstractItemView, QPushButton, QMessageBox
+    QShortcut, QTableWidgetItem, QApplication, QSplitter, QVBoxLayout, QAbstractItemView, QMessageBox
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QKeySequence
 from qt_material import apply_stylesheet
@@ -65,12 +65,16 @@ class Labeler(QMainWindow):
         QTimer.singleShot(0, self.mouse_event.update_size_of_table)
 
         # Loading shortcuts, commands for the mpv player and the settings
-        self.closeEvent = self.close_event
-        self.shortcuts()
+        self.closeEvent = self._close_event
+        self.label_shortcuts()
         self.commands_mpv()
         self.settings()
 
-    def close_event(self, event):
+    def _close_event(self, event):
+        """
+        Custom close event. If data-table was changed it will ask the user, if he wants to save the actual
+        data-table. Save, Discard or Cancel possible.
+        """
         if self.data_table_changed is True:
             reply = QMessageBox.question(self, 'Message',
                                          "Do you want to save changes?",
@@ -80,7 +84,7 @@ class Labeler(QMainWindow):
                 video_name_csv = self.video_name_playing.text()
                 if video_name_csv != "No Video Playing":
                     self.mouse_event.save_csv_data(video_name_csv)
-                event.accept()
+                event.accept() # Close the window
             elif reply == QMessageBox.Discard:
                 event.accept()  # Close the window
             else:
@@ -99,9 +103,9 @@ class Labeler(QMainWindow):
         for shortcut, command in shortcuts.items():
             shortcut = QShortcut(QKeySequence(shortcut), self)
             # noinspection PyUnresolvedReferences
-            shortcut.activated.connect(lambda commands=command: self.__handle_commands_mpv(commands))
+            shortcut.activated.connect(lambda commands=command: self._handle_commands_mpv(commands))
 
-    def __handle_commands_mpv(self, commands):
+    def _handle_commands_mpv(self, commands):
         """
         Handles the commands defined in commands_mpv and set this to the mpv-player
         """
@@ -121,11 +125,11 @@ class Labeler(QMainWindow):
             if value == "delete_row":
                 shortcut = QShortcut(QKeySequence(key), self)
                 # noinspection PyUnresolvedReferences
-                shortcut.activated.connect(self.__delete_selected_row)
+                shortcut.activated.connect(self._delete_selected_row)
             elif value == "sort_table":
                 shortcut = QShortcut(QKeySequence(key), self)
                 # noinspection PyUnresolvedReferences
-                shortcut.activated.connect(self.__sort_data_table)
+                shortcut.activated.connect(self._sort_data_table)
             elif value == "style":
                 # https://pypi.org/project/qt-material/
                 apply_stylesheet(self.app, theme=key, extra={"density_scale": "0"})
@@ -137,16 +141,18 @@ class Labeler(QMainWindow):
                 shortcut = QShortcut(QKeySequence(key), self)
                 # noinspection PyUnresolvedReferences
                 shortcut.activated.connect(self.mouse_event.save_csv_data)
+            elif value == "log_max":
+                self.log_max = int(key)
             else:
                 pass
 
-    def __sort_data_table(self):
+    def _sort_data_table(self):
         """
         Will sort the data table by the first column (in this case StartTime)
         """
         self.data_table.sortByColumn(0, Qt.AscendingOrder)
 
-    def __delete_selected_row(self):
+    def _delete_selected_row(self):
         """
         Will deleted selected row in the data tale
         """
@@ -157,8 +163,9 @@ class Labeler(QMainWindow):
                 rows_to_delete.add(item.row())
             for row in sorted(rows_to_delete, reverse=True):
                 self.data_table.removeRow(row)
+        self.data_table_changed = True
 
-    def shortcuts(self):
+    def label_shortcuts(self):
         """
         Will load the label_shortcuts.json file and process the shortcuts.
         """
@@ -170,42 +177,54 @@ class Labeler(QMainWindow):
                 shortcut = QShortcut(QKeySequence(shortcut_key), self)
                 # noinspection PyUnresolvedReferences
                 shortcut.activated.connect(
-                    lambda labels=label, act_types=act_type, shortcut_keys=shortcut_key: self.__handle_shortcuts(labels,
+                    lambda labels=label, act_types=act_type, shortcut_keys=shortcut_key: self._handle_shortcuts(labels,
                                                                                                                  act_types,
                                                                                                                  shortcut_keys))
 
-    def __handle_shortcuts(self, labels, act_types, shortcut_keys):
+    def _handle_shortcuts(self, labels, act_types, shortcut_keys):
         """
         Is handling the shortcuts for the labels. In this case there are only two options,
         time_window and point_activity to handle. Where The time_window needs to be pressed
         twice to write two values within the table. The point_activity needs only once to be pressed
         to track StartTime and EndTime.
         """
-        # "StartTime", "EndTime", "ActType", "Label", "Video"
         video_name = self.video_name_playing.text()
         play_time = self.playtime.text()
+
+        # "StartTime", "EndTime", "ActType", "Label", "Video"
         data_to_insert = [play_time, play_time, act_types, labels, video_name]
 
         if act_types == "time_window":
-            self.__populate_table_time_window(data_to_insert, shortcut_keys)
+            self._populate_table_time_window(data_to_insert, shortcut_keys)
         elif act_types == "point_activity":
-            self.__populate_table_point_activity(data_to_insert, shortcut_keys)
+            self._populate_table_point_activity(data_to_insert, shortcut_keys)
 
-    def __get_logging_idx(self, act_idx, shortcut_keys):
+    def _get_logging_idx(self, act_idx, shortcut_keys):
+        """
+        Needed for time_window activities. So if the shortcut was already pressed it will return the index of
+        the list, else it returns None.
+        """
         for idx, activity in enumerate(self.logging_activity):
             if activity[1] == shortcut_keys and activity[0] == act_idx:
                 return idx
         return None
 
-    def __clear_logging_layout(self):
+    def _clear_logging_layout(self):
+        """
+        Removing log-widgets.
+        """
         for i in reversed(range(self.layout_vis.count())):
             widgetItem = self.layout_vis.itemAt(i)
             if widgetItem is not None:
                 self.layout_vis.removeWidget(widgetItem.widget())
 
-    def __remove_too_long_logging(self):
+    def _remove_too_long_logging(self):
+        """
+        Removing too long logging list. Can be setup within settings.json as "log_max". Important to keep an
+        overview about labeling.
+        """
         counter = 0
-        while len(self.logging_activity) > 12 and counter < 13:
+        while len(self.logging_activity) > self.log_max and counter < self.log_max+1:
             for idx, logg in enumerate(self.logging_activity):
                 if logg[3] != "darkorange":
                     self.logging_activity.pop(idx)
@@ -213,8 +232,11 @@ class Labeler(QMainWindow):
             counter += 1
 
     def write_logger(self):
+        """
+        Create Labels as a logging window within the GUI.
+        """
         # Clearing the layout before readding widgets
-        self.__clear_logging_layout()
+        self._clear_logging_layout()
 
         for idx, activity in enumerate(self.logging_activity):
             act_row = activity[0]
@@ -234,15 +256,21 @@ class Labeler(QMainWindow):
                 label.setStyleSheet(f"background-color: {act_bg_color}; border: 1px solid {act_border_color};")
             self.layout_vis.addWidget(label, idx, 1)
 
-        self.__remove_too_long_logging()
+        self._remove_too_long_logging()
 
-    def __get_saved_time_window(self, shortcut_keys):
+    def _get_saved_time_window(self, shortcut_keys):
+        """
+        Similar to _get_logging_idx(), but for data-table.
+        """
         for idx, activity in enumerate(self.time_window_activity):
             if activity[2] == shortcut_keys:
                 return (activity, idx)
         return None
 
-    def __handle_first_tw_activity(self, data, shortcut_keys):
+    def _handle_first_tw_activity(self, data, shortcut_keys):
+        """
+        Handling the first shortcut-pressed key for time_window activities.
+        """
         current_row_count = self.data_table.rowCount()
         self.time_window_activity.append((current_row_count, 1, shortcut_keys, data[0]))
 
@@ -253,12 +281,12 @@ class Labeler(QMainWindow):
         self.logging_activity.append([current_row_count, shortcut_keys, "#333333", "darkorange", data])
         self.write_logger()
 
-    def __handle_second_tw_activity(self, data, shortcut_keys, activity, act_idx):
+    def _handle_second_tw_activity(self, data, shortcut_keys, activity, act_idx):
         self.data_table.setItem(activity[0], activity[1],
                                 QTableWidgetItem(data[1]))
         self.time_window_activity.pop(act_idx)
 
-        logg_idx = self.__get_logging_idx(activity[0], shortcut_keys)
+        logg_idx = self._get_logging_idx(activity[0], shortcut_keys)
 
         if logg_idx is not None:
             self.logging_activity[logg_idx] = [activity[0], shortcut_keys, "#333333", "#333333", data]
@@ -266,22 +294,22 @@ class Labeler(QMainWindow):
             self.logging_activity.append([activity[0], shortcut_keys, "#333333", "#333333", data])
         self.write_logger()
 
-    def __populate_table_time_window(self, data, shortcut_keys):
+    def _populate_table_time_window(self, data, shortcut_keys):
         """
-        As described in __handle_shortcuts() above, this function will handle time_window option. (writing twice)
+        As described in _handle_shortcuts() above, this function will handle time_window option. (writing twice)
         """
         self.data_table_changed = True
-        act = self.__get_saved_time_window(shortcut_keys)
+        act = self._get_saved_time_window(shortcut_keys)
         if act is None:
             data[1] = "WAIT..."
-            self.__handle_first_tw_activity(data, shortcut_keys)
+            self._handle_first_tw_activity(data, shortcut_keys)
         else:
             activity = act[0]
             act_idx = act[1]
             data[0] = act[0][-1]
-            self.__handle_second_tw_activity(data, shortcut_keys, activity, act_idx)
+            self._handle_second_tw_activity(data, shortcut_keys, activity, act_idx)
 
-    def __populate_table_point_activity(self, data, shortcut_keys):
+    def _populate_table_point_activity(self, data, shortcut_keys):
         """
         Handling point activity (writing once)
         """
@@ -355,7 +383,8 @@ class Layout:
             vo="x11",
             input_default_bindings=True,
             input_vo_keyboard=True,
-            osc=True
+            osc=True,
+            # script_opts="osd-level=3"
         )
         player["vo"] = "gpu"
         return video, player
