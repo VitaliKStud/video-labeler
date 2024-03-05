@@ -15,6 +15,7 @@ To do:
 - document code
 - video scanning + save video data table (session-like)
 - command_mpv 
+- test
 """
 
 
