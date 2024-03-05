@@ -1,7 +1,7 @@
 {
-  "x": "delete_row",
-  "ENTER": "save_labeling",
-  "s": "sort_table",
+  "X": "delete_row",
+  "CTRL+S": "save_data_table",
+  "S": "sort_table",
   "dark_amber.xml": "style",
   "1600:800": "width_height"
 }
