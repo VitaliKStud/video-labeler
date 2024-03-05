@@ -3,9 +3,11 @@ import os
 import json
 import locale
 import mpv
+import csv
+import pandas as pd
 from PyQt5.QtWidgets import QTableWidget, QMainWindow, QLabel, QWidget, QGridLayout, QScrollArea, QSlider, QStyle, \
-    QShortcut, QTableWidgetItem, QApplication, QSplitter, QVBoxLayout
-from PyQt5.QtCore import Qt
+    QShortcut, QTableWidgetItem, QApplication, QSplitter, QVBoxLayout, QAbstractItemView, QPushButton, QMessageBox
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QKeySequence, QColor, QBrush
 from qt_material import apply_stylesheet
 
@@ -31,6 +33,7 @@ class Labeler(QMainWindow):
         self.time_window_activity = []
         self.start_end_time_activity = []
         self.logging_activity = []
+        self.data_table_changed = False
 
         # Loading shortcuts, commands for the mpv player and the settings
         self.shortcuts()
@@ -72,7 +75,26 @@ class Labeler(QMainWindow):
         self.splitter_v = self.layout.splitter_v
         self.splitter_h = self.layout.splitter_h
         # noinspection PyUnresolvedReferences
+
         self.splitter_h.splitterMoved.connect(self.mouse_event.update_size_of_table)
+        QTimer.singleShot(0, self.mouse_event.update_size_of_table)
+
+        self.closeEvent = self.close_event
+
+    def close_event(self, event):
+        reply = QMessageBox.question(self, 'Message',
+                                     "Do you want to save changes?",
+                                     QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                                     QMessageBox.Save)
+        if reply == QMessageBox.Save:
+            video_name_csv = self.video_name_playing.text()
+            if video_name_csv != "No Video Playing":
+                self.mouse_event.save_csv_data(video_name_csv)
+            event.accept()
+        elif reply == QMessageBox.Discard:
+            event.accept()  # Close the window
+        else:
+            event.ignore()  # Keep the window open
 
 
     def commands_mpv(self):
@@ -179,16 +201,25 @@ class Labeler(QMainWindow):
                 return idx
         return None
 
-
-    def __vis_labeling(self, act_type, shortcut_keys):
-        # [current_row_count, shortcut_keys, "#333333", "darkred", list(data)]
-        # len_logging = len(self.logging_activity)
-
-        # Clearing the layout before readding widgets
+    def __clear_logging_layout(self):
         for i in reversed(range(self.layout_vis.count())):
             widgetItem = self.layout_vis.itemAt(i)
             if widgetItem is not None:
                 self.layout_vis.removeWidget(widgetItem.widget())
+
+
+    def __remove_too_long_logging(self):
+        counter = 0
+        while len(self.logging_activity) > 12 and counter < 13:
+            for idx, logg in enumerate(self.logging_activity):
+                if logg[3] != "darkorange":
+                    self.logging_activity.pop(idx)
+                    break
+            counter += 1
+
+    def write_logger(self):
+        # Clearing the layout before readding widgets
+        self.__clear_logging_layout()
 
         for idx, activity in enumerate(self.logging_activity):
             act_row = activity[0]
@@ -196,21 +227,19 @@ class Labeler(QMainWindow):
             act_bg_color = activity[2]
             act_border_color = activity[3]
             act_data = activity[4]
-            # if shortcut_keys == act_key:
-            label = [str(act_row), act_key, act_data[0], act_data[1], act_data[2], act_data[3]]
+            if act_row == "Saved" or act_row == "Loaded":
+                label = [act_row, act_key, act_data]
+            else:
+                label = [str(act_row), act_key, act_data[0], act_data[1], act_data[2], act_data[3]]
             label = " | ".join(label)
             label = QLabel(label)
-            label.setStyleSheet(f"background-color: {act_bg_color}; border: 2px solid {act_border_color};")
+            if idx == len(self.logging_activity)-1:
+                label.setStyleSheet(f"background-color: #111111; border: 1px solid darkgreen;")
+            else:
+                label.setStyleSheet(f"background-color: {act_bg_color}; border: 1px solid {act_border_color};")
             self.layout_vis.addWidget(label, idx, 1)
 
-        counter = 0
-        while len(self.logging_activity) > 12 and counter < 13:
-            for idx, logg in enumerate(self.logging_activity):
-                if logg[3] == "darkgreen":
-                    self.logging_activity.pop(idx)
-                    break
-            counter += 1
-
+        self.__remove_too_long_logging()
 
 
     def __get_saved_time_window(self, shortcut_keys):
@@ -228,8 +257,8 @@ class Labeler(QMainWindow):
         for j, item in enumerate(data):
             self.data_table.setItem(current_row_count, j, QTableWidgetItem(item))
 
-        self.logging_activity.append([current_row_count, shortcut_keys, "#333333", "darkred", data])
-        self.__vis_labeling(act_type="time_window", shortcut_keys=shortcut_keys)
+        self.logging_activity.append([current_row_count, shortcut_keys, "#333333", "darkorange", data])
+        self.write_logger()
 
     def __handle_second_tw_activity(self, data, shortcut_keys, activity, act_idx):
         self.data_table.setItem(activity[0], activity[1],
@@ -239,15 +268,16 @@ class Labeler(QMainWindow):
         logg_idx = self.__get_logging_idx(activity[0], shortcut_keys)
 
         if logg_idx is not None:
-            self.logging_activity[logg_idx] = [activity[0], shortcut_keys, "#333333", "darkgreen", data]
+            self.logging_activity[logg_idx] = [activity[0], shortcut_keys, "#333333", "#333333", data]
         else:
-            self.logging_activity.append([activity[0], shortcut_keys, "#333333", "darkgreen", data])
-        self.__vis_labeling(act_type="time_window", shortcut_keys=shortcut_keys)
+            self.logging_activity.append([activity[0], shortcut_keys, "#333333", "#333333", data])
+        self.write_logger()
 
     def __populate_table_time_window(self, data, shortcut_keys):
         """
         As described in __handle_shortcuts() above, this function will handle time_window option. (writing twice)
         """
+        self.data_table_changed = True
         act = self.__get_saved_time_window(shortcut_keys)
         if act is None:
             data[1] = "WAIT..."
@@ -262,13 +292,14 @@ class Labeler(QMainWindow):
         """
         Handling point activity (writing once)
         """
+        self.data_table_changed = True
         current_row_count = self.data_table.rowCount()
         self.data_table.setRowCount(current_row_count + 1)
         for j, item in enumerate(data):
             self.data_table.setItem(current_row_count, j, QTableWidgetItem(item))
+        self.logging_activity.append([current_row_count, shortcut_keys, "#222222", "#222222", list(data)])
+        self.write_logger()
 
-        self.logging_activity.append([current_row_count, shortcut_keys, "#333333", "darkgreen", list(data)])
-        self.__vis_labeling(act_type="point_activity", shortcut_keys=shortcut_keys)
 
     def __populate_video_table(self):
         """
@@ -280,10 +311,7 @@ class Labeler(QMainWindow):
             current_row_count = self.video_table.rowCount()
             self.video_table.setRowCount(current_row_count + 1)
             self.video_table.setItem(current_row_count, 0, QTableWidgetItem(video))
-            for row in range(self.video_table.rowCount()):
-                item = self.video_table.item(row, 0)
-                if item:
-                    item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+
 
     def __slider_time_change(self, value):
         """
@@ -293,8 +321,6 @@ class Labeler(QMainWindow):
             slider_value = int((value / self.player.duration) * 1000)
             self.time_slider.setValue(slider_value)
 
-    def __change_labels_color(self, value):
-        pass
 
     def observe_time_position(self):
         """
@@ -349,6 +375,7 @@ class Layout:
         video_table.setRowCount(0)
         video_table.setColumnCount(1)
         video_table.setHorizontalHeaderLabels(["Video"])
+        video_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         scroll_video_table = QScrollArea(self.labeler)
         scroll_video_table.setWidgetResizable(True)
@@ -362,6 +389,7 @@ class Layout:
         data_table.setColumnCount(5)
         data_table.setHorizontalHeaderLabels(
             ["STime", "ETime", "Type", "Label", "Vid"])
+        data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         # Create a scroll are for the table and set table widget as its widget
         scroll_data_table = QScrollArea()
@@ -418,8 +446,8 @@ class Layout:
 
         splitter_v.setSizes(
             [
-                int(height * 0.5),
-                int(height * 0.5)
+                int(height * 0.3),
+                int(height * 0.7)
             ]
 
         )
@@ -450,10 +478,62 @@ class MouseEventHandler:
         """
         row = item.row()
         video_name = self.labeler.video_table.item(row, 0).text()
-        self.labeler.player.loop_playlist = "inf"
+
+        video_name_csv = self.labeler.video_name_playing.text()
+        if video_name_csv != "No Video Playing":
+            self.save_csv_data(video_name_csv)
+
+        self.labeler.player.keep_open = "yes"
         self.labeler.player.play(f'videos/{video_name}')
+        self.labeler.player.pause = True
         self.labeler.observe_time_position()
         self.labeler.video_name_playing.setText(video_name)
+
+        # self.labeler.close_event()
+        self.load_csv_data(video_name)
+        self.labeler.data_table_changed = False
+
+
+    def load_csv_data(self, video_name):
+        video_name_csv = "_".join(video_name.split(".")[:-1])
+        video_name_csv = video_name_csv.replace(" ", "_")
+        try:
+            with open(f"data\\{video_name_csv}.csv", 'r', newline='') as csvfile:
+                csvreader = csv.reader(csvfile, delimiter=";")
+                next(csvreader)
+                self.labeler.data_table.setRowCount(0)  # Clear existing rows
+                for row_data in csvreader:
+                    row = self.labeler.data_table.rowCount()
+                    self.labeler.data_table.insertRow(row)
+                    for column, data in enumerate(row_data):
+                        item = QTableWidgetItem(data)
+                        self.labeler.data_table.setItem(row, column, item)
+            self.labeler.logging_activity.append(["Loaded", video_name_csv, "#0e1a40", "darkgreen", "Format: CSV"])
+            self.labeler.write_logger()
+        except:
+            self.labeler.data_table.setRowCount(0)  # Clear existing rows
+
+
+    def save_csv_data(self, video_name_csv):
+        video_name_csv = "_".join(video_name_csv.split(".")[:-1])
+        video_name_csv = video_name_csv.replace(" ", "_")
+
+        if self.labeler.data_table_changed is True:
+            with open(f"data\\{video_name_csv}.csv", 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile, delimiter=";")
+                csvwriter.writerow(["STIME", "ETIME", "TYPE", "LABEL", "VID"])
+                for data_table_row in range(self.labeler.data_table.rowCount()):
+                    row_data = []
+                    for column in range(self.labeler.data_table.columnCount()):
+                        row_column_item = self.labeler.data_table.item(data_table_row, column)
+                        if row_column_item is not None:
+                            row_data.append(row_column_item.text())
+                        else:
+                            row_data.append("")
+                    csvwriter.writerow(row_data)
+
+            self.labeler.logging_activity.append(["Saved", video_name_csv, "#0e1a40", "darkgreen", "Format: CSV"])
+            self.labeler.write_logger()
 
     def data_table_click(self, item):
         """
@@ -468,8 +548,8 @@ class MouseEventHandler:
             start_time = self.labeler.data_table.item(row, 0).text()
         video_name = self.labeler.data_table.item(row, 4).text()
 
-        self.labeler.player.loop_playlist = "inf"
-        self.labeler.player.loadfile(f'videos/{video_name}', sub_file="sub_test.srt")
+        self.labeler.player.keep_open = "yes"
+        self.labeler.player.play(f'videos/{video_name}')
         self.labeler.player.wait_for_property('seekable')
         self.labeler.player.seek(start_time, "absolute", "exact")
         self.labeler.player.pause = True
