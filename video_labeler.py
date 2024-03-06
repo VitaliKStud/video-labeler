@@ -12,6 +12,11 @@ from qt_material import apply_stylesheet
 
 
 class Labeler(QMainWindow):
+    """
+
+
+    """
+
     def __init__(self, application, parent=None):
         super().__init__(parent)
         self.mouse_event = MouseEventHandler(self)
