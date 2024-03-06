@@ -6,8 +6,22 @@ __pycache__/
 # C extensions
 *.so
 
+# Ignore files in folders
 videos/*.mp4
+videos/*.avi
+videos/*.mkv
+videos/*.flv
+videos/*.wmv
+videos/*.mov
+videos/*.webm
+videos/*.vob
+videos/*.ogv
+videos/*.ogg
+videos/*.h264
 data/*.csv
+data/*.json
+data/*.xml
+data/.xlsx
 
 # Distribution / packaging
 .Python
