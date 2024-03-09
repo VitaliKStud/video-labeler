@@ -52,15 +52,20 @@ needs to be implemented, should be done here'
 title: Classes within video_labeler.py
 ---
 classDiagram
-    note for Labeler "Check the __init__()"
+    note for Labeler "Check the __init__(). "
     Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
     Labeler <|-- Layout
     Labeler <|-- Logger
     Labeler <|-- MouseEventHandler
-    Labeler: +String beakColor
-    Labeler : test()
+    Labeler : settings()
+    Labeler : commands_mpv()
+    Labeler : label_shortcuts()
+    Labeler : observe_time_position()
+    Labeler : _slider_time_change()
+    Labeler : _handle_label_shortcuts()
+    Labeler : _handle_commands_mpv()
     class ActivityHandler{
         +String beakColor
         +swim()
