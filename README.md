@@ -52,8 +52,8 @@ needs to be implemented, should be done here'
 title: Classes within video_labeler.py
 ---
 classDiagram
-    Labeler <|-- ActivityHandler
     note for Labeler "can fly\ncan swim\ncan dive\ncan help in debugging"
+    Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
     Labeler <|-- Layout
