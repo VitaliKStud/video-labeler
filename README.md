@@ -134,8 +134,33 @@ classDiagram
     }
 ```
 
+### .json-Files as Configurations
 
-- Put some videos inside the "videos" folder
-- Run video_labeler.py
-- Setup the .json files (shortcuts etc.)
+Take care of duplicated Hotkeys within .json-Files. 
 
+---
+[commands_mpv.json](commands_mpv.json)
+
+[examples1](https://github.com/mpv-player/mpv/blob/master/etc/input.conf)
+
+[examples2](https://mpv.io/manual/stable/#command-interface)
+
+Every hotkey for the MPV-Player can be set here.
+
+---
+
+- label_shortcuts.json
+- settings.json
+
+```
+{
+  "X": "delete_selected_rows()",
+  "CTRL+S": "write_csv_data()",
+  "S": "sort_data_table()",
+  "L": "update_video_table()",
+  "M": "plot_hotkeys()",
+  "dark_amber.xml": "style",
+  "1600:800": "width_height",
+  "12": "log_max"
+}
+```
