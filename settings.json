@@ -1,7 +1,8 @@
 {
-  "X": "delete_row",
-  "CTRL+S": "save_data_table",
-  "S": "sort_table",
+  "X": "delete_selected_rows()",
+  "CTRL+S": "write_csv_data()",
+  "S": "sort_data_table()",
+  "L": "update_video_table()",
   "dark_amber.xml": "style",
   "1600:800": "width_height",
   "12": "log_max"
