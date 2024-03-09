@@ -52,13 +52,14 @@ needs to be implemented, should be done here'
 title: Classes within video_labeler.py
 ---
 classDiagram
-    note for Labeler "can fly\ncan swim\ncan dive\ncan help in debugging"
+    note for Labeler "Check the __init__()"
     Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
     Labeler <|-- Layout
     Labeler <|-- Logger
     Labeler <|-- MouseEventHandler
+    +String beakColor
     class ActivityHandler{
         +String beakColor
         +swim()
