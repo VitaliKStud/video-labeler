@@ -53,16 +53,12 @@ title: Classes within video_labeler.py
 ---
 classDiagram
     Labeler <|-- ActivityHandler
-    note for Layout "can fly\ncan swim\ncan dive\ncan help in debugging"
+    note for Labeler "can fly\ncan swim\ncan dive\ncan help in debugging"
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
     Labeler <|-- Layout
     Labeler <|-- Logger
     Labeler <|-- MouseEventHandler
-    Labeler : +int age
-    Labeler : +String gender
-    Labeler: +isMammal()
-    Labeler: +mate()
     class ActivityHandler{
         +String beakColor
         +swim()
