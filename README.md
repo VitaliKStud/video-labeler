@@ -52,8 +52,12 @@ needs to be implemented, should be done here'
 title: Classes within video_labeler.py
 ---
 classDiagram
-    note for Labeler "Check the __init__(). Loading and intializing 
-    everything"
+    note for Labeler "Check the __init__(). Loading and init 
+    everything. This class especially load all the .json files
+    and set all the hotkeys"
+    note for ActivityHandler "Time-Window and Point-Activities are
+    implemented within this class. Any new activities should be done
+    here. Also populating the data-table."
     Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
@@ -68,9 +72,11 @@ classDiagram
     Labeler : _handle_label_shortcuts()
     Labeler : _handle_commands_mpv()
     class ActivityHandler{
-        +String beakColor
-        +swim()
-        +quack()
+        _get_saved_time_window()
+        _handle_first_time_window()
+        _handle_second_time_window()
+        _populate_data_table_point_activity()
+        _populate_data_table_time_window()
     }
     class AppFunctions{
         -int sizeInFeet
