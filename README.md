@@ -58,6 +58,14 @@ classDiagram
     note for ActivityHandler "Time-Window and Point-Activities are
     implemented within this class. Any new activities should be done
     here. Also populating the data-table."
+    note for AppFunctions "Any function that can be set up within 
+    settings.json is within this class."
+    note for HotkeyPlotter "Plotting an overview named Hotkeys.png.
+    Also checks for duplicated Hotkeys."
+    note for Layout "Creating all the widgets."
+    note for Logger "Handling logging-window (bottom left)."
+    note for Logger "Any mouse-event that needs to be handled
+    is done here."
     Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
@@ -72,31 +80,52 @@ classDiagram
     Labeler : _handle_label_shortcuts()
     Labeler : _handle_commands_mpv()
     class ActivityHandler{
+        populate_data_table_point_activity()
+        populate_data_table_time_window()
         _get_saved_time_window()
         _handle_first_time_window()
         _handle_second_time_window()
-        _populate_data_table_point_activity()
-        _populate_data_table_time_window()
     }
     class AppFunctions{
-        -int sizeInFeet
-        -canEat()
+        delete_selected_rows()
+        plot_hotkeys()
+        sort_data_table()
+        update_video_table()
+        load_csv_data()
+        write_csv_data()
+        _csv_load_rows()
+        _csv_write_rows()  
     }
     class HotkeyPlotter{
-        +bool is_wild
-        +run()
+        load_and_plot()
+        _check_for_duplicates()
+        _load_files()
+        _make_colors()
+        _plot_hotkeys()
     }
     class Layout{
-        +bool is_wild
-        +run()
+        create_app_window()
+        create_data_table()
+        create_logger()
+        create_mpv_player()
+        create_second_column_video_layout()
+        create_splitter()
+        create_style()
+        create_time_slider()
+        create_video_table()
     }
     class Logger{
-        +bool is_wild
-        +run()
+        write_logger()
+        get_logging_idx()
+        _clear_logger()
+        _remove_too_many_logs()
     }
     class MouseEventHandler{
-        +bool is_wild
-        +run()
+        close_app()
+        data_table_click()
+        splitter_click()
+        splitter_move()
+        video_table_click()
     }
 ```
 
