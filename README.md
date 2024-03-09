@@ -165,12 +165,15 @@ the them of the app.
 - "width_height" initial width:height
 - plot_hotkeys() creates Hotkeys.png with all shortcuts. Also shows 
 if there are duplicated values
-<img src="Hotkeys.png">
 - update_video_table() If there are always new incoming videos within 
 the folder "videos" probably you will need this function.
 - sort_data_table() sorts all the values within the data_table by "STIME"
 
-Example
+plot_hotkeys()
+<img src="Hotkeys.png">
+
+**Example**
+
 ```json
 {
   "X": "delete_selected_rows()",
