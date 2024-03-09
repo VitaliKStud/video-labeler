@@ -42,30 +42,35 @@ pip install -r requirements.txt
 python video_labeler.py
 ```
 
-text = 'Implemented both types, 
-time-window and point-acitivities. Writting 
-data into the data_table. If any new activities 
-needs to be implemented, should be done here'
+### Class Description
+
+- Labeler
+  - Check the __init__(). Loading and init 
+    everything. This class especially load all the .json files
+    and set all the hotkeys
+- ActivityHandler
+  - Time-Window and Point-Activities are
+    implemented within this class. Any new activities should be done
+    here. Also populating the data-table.
+- AppFunctions
+  - Any function that can be set up within 
+    settings.json is within this class.
+- HotkeyPlotter
+  - Plotting an overview named Hotkeys.png.
+    Also checks for duplicated Hotkeys.
+- Layout
+  - Creating all the widgets.
+- Logger
+  - Handling logging-window (bottom left).
+- MouseEventHandler
+  - Any mouse-event that needs to be handled
+    is done here.
 
 ```mermaid
 ---
 title: Classes within video_labeler.py
 ---
 classDiagram
-    note for Labeler "Check the __init__(). Loading and init 
-    everything. This class especially load all the .json files
-    and set all the hotkeys"
-    note for ActivityHandler "Time-Window and Point-Activities are
-    implemented within this class. Any new activities should be done
-    here. Also populating the data-table."
-    note for AppFunctions "Any function that can be set up within 
-    settings.json is within this class."
-    note for HotkeyPlotter "Plotting an overview named Hotkeys.png.
-    Also checks for duplicated Hotkeys."
-    note for Layout "Creating all the widgets."
-    note for Logger "Handling logging-window (bottom left)."
-    note for Logger "Any mouse-event that needs to be handled
-    is done here."
     Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
