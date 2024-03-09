@@ -175,6 +175,7 @@ commands are **LISTS**
 
 time_window and point_activities available.
 
+**EXAMPLE**
 ```json
 {
   "time_window": {
