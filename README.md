@@ -6,6 +6,7 @@ g { color: Green }
 
 The idea behind the video-labeler is to tag time-window and point-activities.
 
+
 - Point-Activity: happens at a single point on a timeline  (....<r>TAG</r>......<r>TAG</r>.....)
 - Time-Window: happens between two point on a timeline (...<r>FIRST_TAG.....SECOND_TAG</r>......)
 
@@ -47,11 +48,32 @@ data into the data_table. If any new activities
 needs to be implemented, should be done here'
 
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+---
+title: Animal example
+---
+classDiagram
+    note "From Duck till Zebra"
+    Animal <|-- Duck
+    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+    class Duck{
+        +String beakColor
+        +swim()
+        +quack()
+    }
+    class Fish{
+        -int sizeInFeet
+        -canEat()
+    }
+    class Zebra{
+        +bool is_wild
+        +run()
+    }
 ```
 
 
