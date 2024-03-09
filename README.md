@@ -152,6 +152,25 @@ Every hotkey for the MPV-Player can be set here.
 - label_shortcuts.json
 - settings.json
 
+---
+[settings.json](settings.json)
+
+Any method from AppFunctions ([video_labeler.py](video_labeler.py)) 
+can be accessed with "()" at the end of the values. 
+
+- "log_max" is for the Logger. Defines what max. number
+of logs should be shown.
+- "style" https://pypi.org/project/qt-material/ changing
+the them of the app.
+- "width_height" initial width:height
+- plot_hotkeys() creates Hotkeys.png with all shortcuts. Also shows 
+if there are duplicated values
+<img src="Hotkeys.png">
+- update_video_table() If there are always new incoming videos within 
+the folder "videos" probably you will need this function.
+- sort_data_table() sorts all the values within the data_table by "STIME"
+
+Example
 ```json
 {
   "X": "delete_selected_rows()",
