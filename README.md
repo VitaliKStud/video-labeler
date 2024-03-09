@@ -60,6 +60,7 @@ classDiagram
     Labeler <|-- Logger
     Labeler <|-- MouseEventHandler
     Labeler: +String beakColor
+    Labeler : test()
     class ActivityHandler{
         +String beakColor
         +swim()
