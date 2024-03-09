@@ -3,6 +3,7 @@
   "CTRL+S": "write_csv_data()",
   "S": "sort_data_table()",
   "L": "update_video_table()",
+  "M": "plot_hotkeys()",
   "dark_amber.xml": "style",
   "1600:800": "width_height",
   "12": "log_max"

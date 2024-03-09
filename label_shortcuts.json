@@ -3,7 +3,8 @@
     "Ctrl+Q": "Running",
     "Ctrl+W": "Running",
     "Ctrl+E": "Running",
-    "Ctrl+R": "Walking"
+    "Ctrl+R": "Walking",
+    "V": "Walking"
   },
   "point_activity": {
     "P": "StepLeft",
@@ -11,11 +12,9 @@
     "W": "StepRight",
     "E": "StepRight",
     "R": "StepRight",
-    "T": "StepRight",
+    "T": "SETTPER",
     "Z": "StepRight",
     "U": "StepRight",
-    "I": "StepRight",
-    "O": "StepRight",
-    "A": "StepRight"
+    "I": "StepRight"
   }
 }

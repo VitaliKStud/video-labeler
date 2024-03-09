@@ -7,6 +7,10 @@ import locale
 import json
 import csv
 
+# For plotting Hotkeys
+import pandas as pd
+import matplotlib.pyplot as plt
+
 # App Widgets
 from PyQt5.QtWidgets import QTableWidget, QMainWindow, QLabel, QWidget, QGridLayout, QScrollArea, QSlider, QStyle, \
     QShortcut, QTableWidgetItem, QApplication, QSplitter, QVBoxLayout, QAbstractItemView, QMessageBox
@@ -137,6 +141,24 @@ class Labeler(QMainWindow):
             else:
                 pass
 
+    def plot_hotkeys(self):
+        with open('settings.json', 'r') as file:
+            settings = json.load(file)
+        for settings_key, settings_value in settings.items():
+            pass
+
+        with open('commands_mpv.json', 'r') as file:
+            commands_mpv = json.load(file)
+        for commands_mpv_key, commands_mpv_value in commands_mpv.items():
+            pass
+
+        with open('label_shortcuts.json', 'r') as file:
+            label_shortcuts = json.load(file)
+
+        for act_type in label_shortcuts:
+            for label_shortcuts_key, label_shortcuts_value in label_shortcuts[act_type].items():
+                pass
+
     def label_shortcuts(self):
         """
         Will load the label_shortcuts.json file and process the shortcuts.
@@ -195,6 +217,7 @@ class Labeler(QMainWindow):
 class ActivityHandler:
     def __init__(self, labeler_instance: Labeler):
         self.labeler = labeler_instance
+        self.data_table_changed = False
 
     def _get_saved_time_window(self, shortcut_keys: str) -> tuple or None:
         """
@@ -213,7 +236,7 @@ class ActivityHandler:
         current_row_count = self.labeler.data_table.rowCount()
         self.labeler.time_window_activity.append((current_row_count, 1, shortcut_keys, data[0]))
 
-        self.data_table.setRowCount(current_row_count + 1)
+        self.labeler.data_table.setRowCount(current_row_count + 1)
         for j, item in enumerate(data):
             self.labeler.data_table.setItem(current_row_count, j, QTableWidgetItem(item))
 
@@ -335,17 +358,6 @@ class Layout:
         data_table_scroll.setWidget(data_table)
         return data_table, data_table_scroll
 
-    def create_time_slider(self) -> QSlider:
-        """
-        Is like a slider within any video-player.
-        """
-        time_slider = QSlider(Qt.Horizontal)
-        time_slider.setMinimum(0)
-        time_slider.setMaximum(1000)
-        time_slider.setTickPosition(QSlider.TicksBelow)
-        time_slider.setSingleStep(1)
-        return time_slider
-
     def create_second_column_video_layout(self) -> tuple[QWidget, QVBoxLayout]:
         """
         Combining MPV-Player, Playing-Time, Video-Name and Time-Slider
@@ -373,7 +385,7 @@ class Layout:
 
     def create_splitter(self) -> tuple[QSplitter, QSplitter]:
         """
-        To make it more userfriendly, there are some splitters.
+        To make it more user-friendly, there are some splitters.
         So the user can drag the windows to the size he wants to.
         """
         # Add scroll_video_table to the first column
@@ -407,6 +419,17 @@ class Layout:
         self.labeler.setCentralWidget(splitter_h)
 
         return splitter_h, splitter_v
+
+    def create_time_slider(self) -> QSlider:
+        """
+        Is like a slider within any video-player.
+        """
+        time_slider = QSlider(Qt.Horizontal)
+        time_slider.setMinimum(0)
+        time_slider.setMaximum(1000)
+        time_slider.setTickPosition(QSlider.TicksBelow)
+        time_slider.setSingleStep(1)
+        return time_slider
 
     def create_style(self):
         """
@@ -506,6 +529,16 @@ class AppFunctions:
             current_row_count = self.labeler.video_table.rowCount()
             self.labeler.video_table.setRowCount(current_row_count + 1)
             self.labeler.video_table.setItem(current_row_count, 0, QTableWidgetItem(video))
+
+    def plot_hotkeys(self):
+        HotkeyPlotter().load_and_plot()
+        os.startfile("Hotkeys.png")
+        self.labeler.logger.logging_activity.append(["Saved",
+                                                     "Hotkeys.png",
+                                                     "#0e1a40",
+                                                     "#0e1a40",
+                                                     "\nIF CHANGE .json -> RESTART APP"])
+        self.labeler.logger.write_logger()
 
 
 class MouseEventHandler:
@@ -682,8 +715,92 @@ class Logger:
         self._remove_too_many_logs()
 
 
-locale.setlocale(locale.LC_NUMERIC, 'C')
-app = QApplication(sys.argv)
-win = Labeler(app)
-win.show()
-sys.exit(app.exec_())
+class HotkeyPlotter:
+
+    def __init__(self):
+        self.colormap = plt.get_cmap("tab10").colors
+
+    def _check_for_duplicates(self, ordered_pairs):
+        d = {}
+        for k, v in ordered_pairs:
+            if k in d:
+                d[k] = "Duplicated key"
+            else:
+                d[k] = v
+        return d
+
+    def _make_colors(self, row):
+
+        if row["Duplicates"] is True or row["Value"] == "Duplicated key":
+            return 4 * [self.colormap[3]]
+        elif row["File"] == "settings.json":
+            return 4 * [self.colormap[5]]
+        elif row["File"] == "label_shortcuts.json":
+            return 4 * [self.colormap[0]]
+        elif row["File"] == "commands_mpv.json":
+            return 4 * [self.colormap[2]]
+
+    def _load_files(self, json_file):
+        data = []
+        with open(json_file, 'r') as file:
+            json_data = json.load(file, object_pairs_hook=self._check_for_duplicates)
+
+        if json_file == "label_shortcuts.json":
+            for act_type in json_data:
+                for key, value in json_data[act_type].items():
+                    data.append((key, value, act_type, json_file))
+        else:
+            for key, value in json_data.items():
+                data.append((key, value, "", json_file))
+        df = pd.DataFrame(data, columns=["Hotkey", "Value", "ActType", "File"])
+        return df
+
+    def _plot_hotkeys(self, df):
+        colors = df.apply(lambda row: self._make_colors(row), axis=1)
+        df = df.drop(columns=["Duplicates"])
+
+        fig, ax = plt.subplots()
+
+        ax.axis('off')
+        table = ax.table(
+            cellText=df.values,
+            colLabels=df.keys(),
+            loc='center',
+            cellLoc='left',
+            cellColours=colors.to_list(),
+        )
+
+        for key, cell in table.get_celld().items():
+            cell.set_linewidth(0.05)
+            cell.get_text().set_color("white")
+            cell.set_edgecolor("white")
+
+        for i in range(0, 4):
+            table.get_celld()[(0, i)].set_facecolor("black")
+
+        fig.tight_layout()
+        fig.savefig('Hotkeys.png', dpi=1000)
+        plt.close()
+
+    def load_and_plot(self):
+        labels = self._load_files("label_shortcuts.json")
+        settings = self._load_files("settings.json")
+        label_shortcuts = self._load_files("commands_mpv.json")
+        df = pd.concat([labels, settings], axis=0)
+        df = pd.concat([df, label_shortcuts], axis=0).reset_index(drop=True)
+
+        df["Duplicates"] = df.duplicated(subset="Hotkey", keep=False)
+        df["Value"] = df["Value"].where(df["Duplicates"] == False, "Duplicated key")
+        self._plot_hotkeys(df)
+
+
+def start_app():
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+    app = QApplication(sys.argv)
+    win = Labeler(app)
+    win.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    start_app()
