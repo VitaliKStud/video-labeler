@@ -146,11 +146,57 @@ Take care of duplicated Hotkeys within .json-Files.
 [examples2](https://mpv.io/manual/stable/#command-interface)
 
 Every hotkey for the MPV-Player can be set here.
+Similar to mpv.commands(**kwargs). Single commands are **STRINGS** multiple
+commands are **LISTS**
+
+**EXAMPLE**
+```json
+{
+  "SPACE": ["cycle", "pause"],
+  "right": "frame-step",
+  "left": "frame-back-step",
+  "up": ["multiply", "speed", "1.1"],
+  "down": ["multiply", "speed", "1/1.1"],
+  ".": "frame-step",
+  ",": "frame-back-step",
+  "+": ["add", "video-zoom", "0.1"],
+  "-": ["add", "video-zoom", "-0.1"],
+  "Shift+up": ["add", "video-pan-y", "0.1"],
+  "Shift+right": ["add", "video-pan-x", "-0.1"],
+  "Shift+left": ["add", "video-pan-x", "0.1"],
+  "Shift+down": ["add", "video-pan-y", "-0.1"],
+  "BACKSPACE": ["set", "speed", "1.0"]
+}
+
+```
 
 ---
+[label_shortcuts.json](label_shortcuts.json)
 
-- label_shortcuts.json
-- settings.json
+time_window and point_activities available.
+
+```json
+{
+  "time_window": {
+    "Ctrl+Q": "Running",
+    "Ctrl+W": "Running",
+    "Ctrl+E": "Running",
+    "Ctrl+R": "Walking",
+    "V": "Walking"
+  },
+  "point_activity": {
+    "P": "StepLeft",
+    "Q": "StepRight",
+    "W": "StepRight",
+    "E": "StepRight",
+    "R": "StepRight", # DUPLICATED (AVOID) USE plot_hotkeys() to find duplicates
+    "R": "SETTPER", # DUPLICATED (AVOID) USE plot_hotkeys() to find duplicates
+    "Z": "StepRight",
+    "U": "StepRight",
+    "I": "StepRight"
+  }
+}
+```
 
 ---
 [settings.json](settings.json)
@@ -172,7 +218,7 @@ the folder "videos" probably you will need this function.
 plot_hotkeys()
 <img src="Hotkeys.png">
 
-**Example**
+**EXAMPLE**
 
 ```json
 {
