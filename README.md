@@ -59,7 +59,7 @@ classDiagram
     Labeler <|-- Layout
     Labeler <|-- Logger
     Labeler <|-- MouseEventHandler
-    +String beakColor
+    Labeler: +String beakColor
     class ActivityHandler{
         +String beakColor
         +swim()
