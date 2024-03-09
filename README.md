@@ -152,7 +152,7 @@ Every hotkey for the MPV-Player can be set here.
 - label_shortcuts.json
 - settings.json
 
-```
+```json
 {
   "X": "delete_selected_rows()",
   "CTRL+S": "write_csv_data()",
