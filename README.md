@@ -27,13 +27,13 @@ pip install -r requirements.txt
 ├── videos 
 │   ├── .mp4
 │   ├── .avi
-│   └── all types supported by mpv player
-├── Hotkeys.png (if created)
-├── commands_mpv.json (setting for mpv player)
-├── label_shortcuts.json (hotkeys for labeling)
-├── settings.json (hotkeys and settings for the app)
+│   └── .                                   all types supported by mpv player
+├── Hotkeys.png                             (if created)
+├── commands_mpv.json                       (setting for mpv player)
+├── label_shortcuts.json                    (hotkeys for labeling)
+├── settings.json                           (hotkeys and settings for the app)
 ├── requirements.txt
-└── video_labeler.py (run this to start)
+└── video_labeler.py                        (run this to start)
 ```
 
 ### Start app (Video Labeler)
@@ -49,28 +49,42 @@ needs to be implemented, should be done here'
 
 ```mermaid
 ---
-title: Animal example
+title: Classes within video_labeler.py
 ---
 classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
+    Labeler <|-- ActivityHandler
     note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
+    Animal <|-- AppFunctions
+    Animal <|-- HotkeyPlotter
+    Animal <|-- Layout
+    Animal <|-- Logger
+    Animal <|-- MouseEventHandler
     Animal : +int age
     Animal : +String gender
     Animal: +isMammal()
     Animal: +mate()
-    class Duck{
+    class ActivityHandler{
         +String beakColor
         +swim()
         +quack()
     }
-    class Fish{
+    class AppFunctions{
         -int sizeInFeet
         -canEat()
     }
-    class Zebra{
+    class HotkeyPlotter{
+        +bool is_wild
+        +run()
+    }
+    class Layout{
+        +bool is_wild
+        +run()
+    }
+    class Logger{
+        +bool is_wild
+        +run()
+    }
+    class MouseEventHandler{
         +bool is_wild
         +run()
     }
