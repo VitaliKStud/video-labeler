@@ -141,24 +141,6 @@ class Labeler(QMainWindow):
             else:
                 pass
 
-    def plot_hotkeys(self):
-        with open('settings.json', 'r') as file:
-            settings = json.load(file)
-        for settings_key, settings_value in settings.items():
-            pass
-
-        with open('commands_mpv.json', 'r') as file:
-            commands_mpv = json.load(file)
-        for commands_mpv_key, commands_mpv_value in commands_mpv.items():
-            pass
-
-        with open('label_shortcuts.json', 'r') as file:
-            label_shortcuts = json.load(file)
-
-        for act_type in label_shortcuts:
-            for label_shortcuts_key, label_shortcuts_value in label_shortcuts[act_type].items():
-                pass
-
     def label_shortcuts(self):
         """
         Will load the label_shortcuts.json file and process the shortcuts.
@@ -718,6 +700,7 @@ class Logger:
 class HotkeyPlotter:
 
     def __init__(self):
+        # noinspection PyUnresolvedReferences
         self.colormap = plt.get_cmap("tab10").colors
 
     def _check_for_duplicates(self, ordered_pairs):
@@ -790,7 +773,7 @@ class HotkeyPlotter:
         df = pd.concat([df, label_shortcuts], axis=0).reset_index(drop=True)
 
         df["Duplicates"] = df.duplicated(subset="Hotkey", keep=False)
-        df["Value"] = df["Value"].where(df["Duplicates"] == False, "Duplicated key")
+        df["Value"] = df["Value"].where(~df["Duplicates"], "Duplicated key")
         self._plot_hotkeys(df)
 
 
