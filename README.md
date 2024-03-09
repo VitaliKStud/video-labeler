@@ -52,7 +52,8 @@ needs to be implemented, should be done here'
 title: Classes within video_labeler.py
 ---
 classDiagram
-    note for Labeler "Check the __init__(). "
+    note for Labeler "Check the __init__(). Loading and intializing 
+    everything"
     Labeler <|-- ActivityHandler
     Labeler <|-- AppFunctions
     Labeler <|-- HotkeyPlotter
