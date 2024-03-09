@@ -47,7 +47,7 @@ python video_labeler.py
 - Labeler
   - Check the __init__(). Loading and init 
     everything. This class especially load all the .json files
-    and set all the hotkeys
+    and set all the hotkeys. Also to bring everything together
 - ActivityHandler
   - Time-Window and Point-Activities are
     implemented within this class. Any new activities should be done
@@ -57,11 +57,11 @@ python video_labeler.py
     settings.json is within this class.
 - HotkeyPlotter
   - Plotting an overview named Hotkeys.png.
-    Also checks for duplicated Hotkeys.
+    Also checks for duplicated Hotkeys. Marked as red inside image.
 - Layout
   - Creating all the widgets.
 - Logger
-  - Handling logging-window (bottom left).
+  - Handling logging-window (bottom left of the app).
 - MouseEventHandler
   - Any mouse-event that needs to be handled
     is done here.
