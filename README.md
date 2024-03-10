@@ -217,7 +217,8 @@ the folder "videos" probably you will need this function.
 - sort_data_table() sorts all the values within the data_table by "STIME"
 
 plot_hotkeys()
-<img src="Hotkeys.png">
+<img src="docs/Hotkeys.png">
+
 
 **EXAMPLE**
 
