@@ -1,9 +1,3 @@
-<style>
-r { color: Red }
-o { color: Orange }
-g { color: Green }
-</style>
-
 The idea behind the video-labeler is to tag time-window and point-activities.
 
 
