@@ -686,10 +686,12 @@ class MouseEventHandler:
         column = item.column()
         if column == 0 or column == 1:
             start_time = self.labeler.data_table.item(row, column).text()
+            if start_time == "WAIT...":
+                start_time = self.labeler.data_table.item(row, 0).text()
         else:
             start_time = self.labeler.data_table.item(row, 0).text()
-        video_name = self.labeler.data_table.item(row, 4).text()
 
+        video_name = self.labeler.data_table.item(row, 4).text()
         self.labeler.player.keep_open = "yes"
         self.labeler.player.play(f'videos/{video_name}')
         self.labeler.player.wait_for_property('seekable')
