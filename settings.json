@@ -2,8 +2,8 @@
   "X": "delete_selected_rows()",
   "CTRL+S": "save_csv()",
   "S": "sort_data_table()",
-  "L": "update_video_table()",
-  "M": "plot_hotkeys()",
+  "U": "update_video_table()",
+  "P": "plot_hotkeys()",
   "dark_amber.xml": "style",
   "1600:800": "width_height",
   "12": "log_max"
