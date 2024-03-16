@@ -1,18 +1,4 @@
-Check the mpv_player.zip file. Insert it into your python environment\\Script.
 
-It should looks following:
-
-<img src="./docs/_example_images/mpv_to_script.png">
-
-It is also possible just to download the mpv-player files:
-
-https://sourceforge.net/projects/mpv-player-windows/files/
-
-Tested and stable version (windows): 
-- mpv-dev-x86_64-v3-20240211-git-f5c4f0b 
-- mpv-x86_64-v3-20240211-git-f5c4f0b
-- 02.11.2024 stable version
- 
 The idea behind the video-labeler is to tag time-window and point-activities.
 
 
@@ -21,6 +7,19 @@ The idea behind the video-labeler is to tag time-window and point-activities.
 
 <img src="./docs/_example_images/example.png">
 
+
+Download following files:
+
+https://sourceforge.net/projects/mpv-player-windows/files/
+
+Tested and stable version (windows): 
+- mpv-dev-x86_64-v3-20240211-git-f5c4f0b 
+- mpv-x86_64-v3-20240211-git-f5c4f0b
+- 02.11.2024 stable version
+
+Insert it into your python environment\\Script. It should looks following:
+
+<img src="./docs/_example_images/mpv_to_script.png">
 
 ### Requirements
 ```
