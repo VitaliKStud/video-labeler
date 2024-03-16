@@ -147,7 +147,7 @@ classDiagram
 Take care of duplicated Hotkeys within .json-Files. 
 
 ---
-[commands_mpv.json](commands_mpv.json)
+[commands_mpv.json](src/commands_mpv.json)
 
 [examples1](https://github.com/mpv-player/mpv/blob/master/etc/input.conf)
 
@@ -179,7 +179,7 @@ commands are **LISTS**
 ```
 
 ---
-[label_shortcuts.json](label_shortcuts.json)
+[label_shortcuts.json](src/label_shortcuts.json)
 
 time_window and point_activities available.
 
@@ -208,9 +208,9 @@ time_window and point_activities available.
 ```
 
 ---
-[settings.json](settings.json)
+[settings.json](src/settings.json)
 
-Any method from AppFunctions ([video_labeler.py](video_labeler.py)) 
+Any method from AppFunctions ([video_labeler.py](src/video_labeler.py)) 
 can be accessed with "()" at the end of the values. 
 
 - "log_max" is for the Logger. Defines what max. number

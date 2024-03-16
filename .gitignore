@@ -14,21 +14,21 @@ docs/conf.py
 docs/make.bat
 
 # Ignore files in folders
-videos/*.mp4
-videos/*.avi
-videos/*.mkv
-videos/*.flv
-videos/*.wmv
-videos/*.mov
-videos/*.webm
-videos/*.vob
-videos/*.ogv
-videos/*.ogg
-videos/*.h264
-data/*.csv
-data/*.json
-data/*.xml
-data/.xlsx
+src/videos/*.mp4
+src/videos/*.avi
+src/videos/*.mkv
+src/videos/*.flv
+src/videos/*.wmv
+src/videos/*.mov
+src/videos/*.webm
+src/videos/*.vob
+src/videos/*.ogv
+src/videos/*.ogg
+src/videos/*.h264
+src/data/*.csv
+src/data/*.json
+src/data/*.xml
+src/data/.xlsx
 
 # Distribution / packaging
 .Python
