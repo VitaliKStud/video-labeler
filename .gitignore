@@ -9,6 +9,10 @@ __pycache__/
 # C extensions
 *.so
 
+docs/Makefile
+docs/conf.py
+docs/make.bat
+
 # Ignore files in folders
 videos/*.mp4
 videos/*.avi
