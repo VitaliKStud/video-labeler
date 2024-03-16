@@ -242,3 +242,28 @@ plot_hotkeys()
   "12": "log_max"
 }
 ```
+
+### Create executable (.exe)
+
+All dependencies are split out from the executable (app will be faster, but a folder
+with dependencies).
+
+Terminal:
+```
+pip install pyinstaller
+cd src
+pyinstaller video_labeler.py
+```
+
+---------------------------------
+Just one file as executable (app will be slower, but only one file to execute).
+
+Terminal:
+```
+pip install pyinstaller
+cd src
+pyinstaller video_labeler.py --onefile
+```
+
+This will create a "build" and a "dist" folder. Go to dist folder. There you
+will find the executable.
