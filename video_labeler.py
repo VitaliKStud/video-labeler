@@ -178,7 +178,7 @@ class Labeler(QMainWindow):
         """
         Change the position of the slider, defined by current video time.
         """
-        if self.player.duration != 0 and not self.time_slider.isSliderDown():
+        if self.player.duration != 0 and not self.time_slider.isSliderDown() and self.player.duration is not None:
             slider_value = int((value / self.player.duration) * 1000)
             self.time_slider.setValue(slider_value)
 
@@ -612,8 +612,20 @@ class MouseEventHandler:
         self.labeler.time_slider.setValue(value)
         # noinspection PyUnresolvedReferences
         self.labeler.time_slider.valueChanged.emit(value)
-        seek_time = self.labeler.time_slider.value() / 1000 * self.labeler.player.duration
+        try:
+            seek_time = self.labeler.time_slider.value() / 1000 * self.labeler.player.duration
+        except Exception as e:
+            seek_time = 0
+            self.labeler.logger.append_logging(
+                type="Information",
+                text=f"ERROR porbably corrupted VIDEO: {e}",
+                bg_color="#400000",
+                border_color="#400000",
+                ignore_if_tracked=True
+            )
+
         self.labeler.player.command('seek', seek_time, 'absolute')
+
 
     def splitter_click(self):
         """
@@ -669,6 +681,25 @@ class Logger:
             if widget_item is not None:
                 self.labeler.logger_grid.removeWidget(widget_item.widget())
 
+    def append_logging(self,
+                       type: str = "Information", # "Information", "Saved", "Loaded" possible else is index of data_table
+                       text: str = "",
+                       bg_color: str = "#333333",
+                       border_color: str = "#333333",
+                       text_2: str = "",
+                       ignore_if_tracked: bool = False
+                       ):
+        """
+        Easier way to append the logging activity. More understandable.
+        """
+        if ignore_if_tracked is True:
+            if [type, text, bg_color, border_color, text_2] in self.logging_activity:
+                pass
+            else:
+                self.logging_activity.append([type, text, bg_color, border_color, text_2])
+        else:
+            self.logging_activity.append([type, text, bg_color, border_color, text_2])
+
     def write_logger(self):
         """
         Create Labels as a logging window within the GUI.
@@ -682,7 +713,7 @@ class Logger:
             act_bg_color = activity[2]
             act_border_color = activity[3]
             act_data = activity[4]
-            if act_row == "Saved" or act_row == "Loaded":
+            if act_row == "Saved" or act_row == "Loaded" or act_row == "Information":
                 label = [act_row, act_key, act_data]
             else:
                 label = [str(act_row), act_key, act_data[0], act_data[1], act_data[2], act_data[3]]
