@@ -12,7 +12,7 @@ Tested and stable version (windows):
 - mpv-dev-x86_64-v3-20240211-git-f5c4f0b 
 - mpv-x86_64-v3-20240211-git-f5c4f0b
 - 02.11.2024 stable version
-
+ 
 The idea behind the video-labeler is to tag time-window and point-activities.
 
 

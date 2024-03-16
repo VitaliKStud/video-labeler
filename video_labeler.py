@@ -465,6 +465,10 @@ class AppFunctions:
             self.labeler.logger.write_logger()
             self.labeler.data_table_changed = False
 
+    def save_csv(self):
+        self.labeler.data_table_changed = True
+        self.write_csv_data()
+
     def _csv_write_rows(self, csvwriter: csv.writer):
         for data_table_row in range(self.labeler.data_table.rowCount()):
             row_data = []
@@ -505,6 +509,7 @@ class AppFunctions:
         Will create the playlist as a table, so all the videos in the "videos" directory will be shown as a table.
         Disable edits for column 0 (Video).
         """
+
         videos = os.listdir("videos")
         self.labeler.video_table.setRowCount(0)
         for idx, video in enumerate(videos):

@@ -1,6 +1,6 @@
 {
   "X": "delete_selected_rows()",
-  "CTRL+S": "write_csv_data()",
+  "CTRL+S": "save_csv()",
   "S": "sort_data_table()",
   "L": "update_video_table()",
   "M": "plot_hotkeys()",
