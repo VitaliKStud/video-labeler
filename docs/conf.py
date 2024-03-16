@@ -22,7 +22,7 @@ copyright = '-'
 author = 'Vitali Krilov, Vladislav Stasenko,'
 
 # The full version, including alpha/beta/rc tags
-release = '09.03.2024'
+release = '16.03.2024'
 
 
 # -- General configuration ---------------------------------------------------

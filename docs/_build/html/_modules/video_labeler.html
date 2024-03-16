@@ -106,8 +106,16 @@
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.Labeler">[docs]</a>
 <span class="k">class</span> <span class="nc">Labeler</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is the &quot;main&quot; class for the application. It brings everything together. Also loading</span>
+<span class="sd">    classes:</span>
 
+<span class="sd">    - MouseEventHandler() as mouse_event</span>
+<span class="sd">    - Layout() as layout</span>
+<span class="sd">    - AppFunctions() as app_functions</span>
+<span class="sd">    - Logger() as logger</span>
+<span class="sd">    - ActivityHandler() as activity_handler</span>
 
+<span class="sd">    Everything is set up here. Also loading the .json files and processing and binding them.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Labeler.__init__">
@@ -152,8 +160,8 @@
 
         <span class="c1"># Define Time Slider</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">time_slider</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">mousePressEvent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_event</span><span class="o">.</span><span class="n">splitter_move</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">mouseMoveEvent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_event</span><span class="o">.</span><span class="n">splitter_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">mousePressEvent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_event</span><span class="o">.</span><span class="n">slider_move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">mouseMoveEvent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_event</span><span class="o">.</span><span class="n">slider_move</span>
 
         <span class="c1"># Define Logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">logger_widget</span>
@@ -269,7 +277,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the position of the slider, defined by current video time.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">duration</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">isSliderDown</span><span class="p">():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">duration</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">isSliderDown</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">slider_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">slider_value</span><span class="p">)</span>
 
@@ -297,8 +305,7 @@
 <div class="viewcode-block" id="ActivityHandler.__init__">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.ActivityHandler.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labeler_instance</span><span class="p">:</span> <span class="n">Labeler</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span> <span class="o">=</span> <span class="n">labeler_instance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span> <span class="o">=</span> <span class="n">labeler_instance</span></div>
 
 
     <span class="k">def</span> <span class="nf">_get_saved_time_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shortcut_keys</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">:</span>
@@ -326,6 +333,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">write_logger</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_handle_second_time_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">shortcut_keys</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">activity</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">act_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handling the second time shortcut-pressed key for time_window activities. It is important to know,</span>
+<span class="sd">        that &quot;WAIT...&quot; means, it is waiting for the second time to be pressed. So a time_window should be always</span>
+<span class="sd">        closed and got StartTime and EndTime.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">activity</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">activity</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                                         <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">time_window_activity</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">act_idx</span><span class="p">)</span>
@@ -343,8 +355,9 @@
     <span class="k">def</span> <span class="nf">populate_data_table_time_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">shortcut_keys</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        As described in _handle_shortcuts() above, this function will handle time_window option. (writing twice)</span>
+<span class="sd">        It checks if it is first time pressed or second time pressed for the time_window activity.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">act</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_saved_time_window</span><span class="p">(</span><span class="n">shortcut_keys</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">act</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;WAIT...&quot;</span>
@@ -362,7 +375,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handling point activity (writing once)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">current_row_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="n">current_row_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -377,6 +390,11 @@
 <div class="viewcode-block" id="Layout">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.Layout">[docs]</a>
 <span class="k">class</span> <span class="nc">Layout</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is for creating the app-layout of the widgets. No functionality, only widgets. If it&#39;s needed to</span>
+<span class="sd">    insert more widgets, should be done here. And can be accessed within Labeler class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Layout.__init__">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.Layout.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labeler_instance</span><span class="p">:</span> <span class="n">Labeler</span><span class="p">):</span>
@@ -566,8 +584,8 @@
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.AppFunctions">[docs]</a>
 <span class="k">class</span> <span class="nc">AppFunctions</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A helper class for handling all the events of Labeler class.</span>
-<span class="sd">    Everything that happens with Mouse-Clicks is an Event in this case.</span>
+<span class="sd">    This class gives some functionality to the app. Every function can also be accessed within settings.py and</span>
+<span class="sd">    bind to a shortcut.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AppFunctions.__init__">
@@ -605,6 +623,9 @@
 <div class="viewcode-block" id="AppFunctions.write_csv_data">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.AppFunctions.write_csv_data">[docs]</a>
     <span class="k">def</span> <span class="nf">write_csv_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Will write the data to csv. Loading the values from data_table and saving the video_name.csv.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">video_name_csv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">video_name_playing</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">video_name_csv</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">video_name_csv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">video_name_csv</span> <span class="o">=</span> <span class="n">video_name_csv</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
@@ -619,7 +640,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
+<div class="viewcode-block" id="AppFunctions.save_csv">
+<a class="viewcode-back" href="../video_labeler.html#video_labeler.AppFunctions.save_csv">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Is needed to hard-save the csv file. It saves the csv file even the table is not changed. Where write_csv_data()</span>
+<span class="sd">        checks if the data_table was changed or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table_changed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_csv_data</span><span class="p">()</span></div>
+
+
     <span class="k">def</span> <span class="nf">_csv_write_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csvwriter</span><span class="p">:</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper to write the rows to the csv file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">data_table_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()):</span>
             <span class="n">row_data</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
@@ -633,6 +668,10 @@
 <div class="viewcode-block" id="AppFunctions.load_csv_data">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.AppFunctions.load_csv_data">[docs]</a>
     <span class="k">def</span> <span class="nf">load_csv_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If there are any safed files for the loaded video. It will open the csv file and convert it into the</span>
+<span class="sd">        data_table. So you can switch between videos and still have the actual data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">video_table</span><span class="o">.</span><span class="n">currentRow</span><span class="p">()</span>
         <span class="n">video_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">video_table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">video_name_csv</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">video_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -649,6 +688,9 @@
 
 
     <span class="k">def</span> <span class="nf">_csv_load_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csvreader</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper to load the rows from the csv file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Clear existing rows</span>
         <span class="k">for</span> <span class="n">row_data</span> <span class="ow">in</span> <span class="n">csvreader</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">data_table</span><span class="o">.</span><span class="n">rowCount</span><span class="p">()</span>
@@ -664,6 +706,7 @@
 <span class="sd">        Will create the playlist as a table, so all the videos in the &quot;videos&quot; directory will be shown as a table.</span>
 <span class="sd">        Disable edits for column 0 (Video).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">videos</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;videos&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">video_table</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">video</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">videos</span><span class="p">):</span>
@@ -675,6 +718,10 @@
 <div class="viewcode-block" id="AppFunctions.plot_hotkeys">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.AppFunctions.plot_hotkeys">[docs]</a>
     <span class="k">def</span> <span class="nf">plot_hotkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        To get access to plot hotkeys within settings.json. Important to know here. It will also open the plotted</span>
+<span class="sd">        hotkeys and write it into the logger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">HotkeyPlotter</span><span class="p">()</span><span class="o">.</span><span class="n">load_and_plot</span><span class="p">()</span>
         <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="s2">&quot;Hotkeys.png&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">logging_activity</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;Saved&quot;</span><span class="p">,</span>
@@ -717,7 +764,7 @@
             <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Save</span><span class="p">:</span>
                 <span class="n">video_name_csv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">video_name_playing</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">video_name_csv</span> <span class="o">!=</span> <span class="s2">&quot;No Video Playing&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">app_functions</span><span class="o">.</span><span class="n">write_csv_data</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">app_functions</span><span class="o">.</span><span class="n">save_csv</span><span class="p">()</span>
                 <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>  <span class="c1"># Close the window</span>
             <span class="k">elif</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Discard</span><span class="p">:</span>
                 <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>  <span class="c1"># Close the window</span>
@@ -773,9 +820,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">video_name_playing</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">video_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="MouseEventHandler.splitter_move">
-<a class="viewcode-back" href="../video_labeler.html#video_labeler.MouseEventHandler.splitter_move">[docs]</a>
-    <span class="k">def</span> <span class="nf">splitter_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<div class="viewcode-block" id="MouseEventHandler.slider_move">
+<a class="viewcode-back" href="../video_labeler.html#video_labeler.MouseEventHandler.slider_move">[docs]</a>
+    <span class="k">def</span> <span class="nf">slider_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handling the slider mouse press event. So it acts like a normal slider for a video.</span>
 <span class="sd">        For example, you can add self.player.pause = False at the end, and it will play the video</span>
@@ -792,7 +839,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="c1"># noinspection PyUnresolvedReferences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">seek_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">duration</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">seek_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">time_slider</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">duration</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">seek_time</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">append_logging</span><span class="p">(</span>
+                <span class="n">logg_type</span><span class="o">=</span><span class="s2">&quot;Information&quot;</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ERROR probably corrupted VIDEO: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">bg_color</span><span class="o">=</span><span class="s2">&quot;#400000&quot;</span><span class="p">,</span>
+                <span class="n">border_color</span><span class="o">=</span><span class="s2">&quot;#400000&quot;</span><span class="p">,</span>
+                <span class="n">ignore_if_tracked</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;seek&#39;</span><span class="p">,</span> <span class="n">seek_time</span><span class="p">,</span> <span class="s1">&#39;absolute&#39;</span><span class="p">)</span></div>
 
 
@@ -819,6 +877,11 @@
 <div class="viewcode-block" id="Logger">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.Logger">[docs]</a>
 <span class="k">class</span> <span class="nc">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is creating some logging to inform the user what happens. The most important cases are</span>
+<span class="sd">    handled here and will be written into the Logging window within the app.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Logger.__init__">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.Logger.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labeler_instance</span><span class="p">:</span> <span class="n">Labeler</span><span class="p">):</span>
@@ -862,11 +925,46 @@
             <span class="k">if</span> <span class="n">widget_item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">labeler</span><span class="o">.</span><span class="n">logger_grid</span><span class="o">.</span><span class="n">removeWidget</span><span class="p">(</span><span class="n">widget_item</span><span class="o">.</span><span class="n">widget</span><span class="p">())</span>
 
+<div class="viewcode-block" id="Logger.append_logging">
+<a class="viewcode-back" href="../video_labeler.html#video_labeler.Logger.append_logging">[docs]</a>
+    <span class="k">def</span> <span class="nf">append_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">logg_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Information&quot;</span><span class="p">,</span>
+                       <span class="c1"># &quot;Information&quot;, &quot;Saved&quot;, &quot;Loaded&quot; possible else is index of data_table</span>
+                       <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                       <span class="n">bg_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#333333&quot;</span><span class="p">,</span>
+                       <span class="n">border_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#333333&quot;</span><span class="p">,</span>
+                       <span class="n">text_2</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                       <span class="n">ignore_if_tracked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+                       <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Easier way to append the logging activity. More understandable.</span>
+<span class="sd">        Set ignore_if_tracked as True if you want to show it only once or if it already in the logging window.</span>
+<span class="sd">        Then it won&#39;t display.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ignore_if_tracked</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">[</span><span class="n">logg_type</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span> <span class="n">text_2</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_activity</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logging_activity</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">logg_type</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span> <span class="n">text_2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logging_activity</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">logg_type</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span> <span class="n">text_2</span><span class="p">])</span></div>
+
+
 <div class="viewcode-block" id="Logger.write_logger">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.Logger.write_logger">[docs]</a>
     <span class="k">def</span> <span class="nf">write_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create Labels as a logging window within the GUI.</span>
+<span class="sd">        Create Labels as a logging window within the GUI. Use &quot;Information&quot; as the first value within</span>
+<span class="sd">        the logging_activity list. Just append this list somewhere with three values. or just use</span>
+<span class="sd">        append_logging() instead of self.logging_activity.append(). Both ways are fine.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">        --------</span>
+<span class="sd">        self.logging_activity.append([&quot;Information&quot;,</span>
+<span class="sd">        &quot;The data is saved to .csv&quot;,</span>
+<span class="sd">        &quot;Check documentation for more Information&quot;])</span>
+<span class="sd">        self.logger.write_logger() # Will write the appended logging</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Clearing the layout before reading widgets</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_logger</span><span class="p">()</span>
@@ -877,7 +975,7 @@
             <span class="n">act_bg_color</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">act_border_color</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
             <span class="n">act_data</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">act_row</span> <span class="o">==</span> <span class="s2">&quot;Saved&quot;</span> <span class="ow">or</span> <span class="n">act_row</span> <span class="o">==</span> <span class="s2">&quot;Loaded&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">act_row</span> <span class="o">==</span> <span class="s2">&quot;Saved&quot;</span> <span class="ow">or</span> <span class="n">act_row</span> <span class="o">==</span> <span class="s2">&quot;Loaded&quot;</span> <span class="ow">or</span> <span class="n">act_row</span> <span class="o">==</span> <span class="s2">&quot;Information&quot;</span><span class="p">:</span>
                 <span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="n">act_row</span><span class="p">,</span> <span class="n">act_key</span><span class="p">,</span> <span class="n">act_data</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">act_row</span><span class="p">),</span> <span class="n">act_key</span><span class="p">,</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">act_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
@@ -897,6 +995,11 @@
 <div class="viewcode-block" id="HotkeyPlotter">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.HotkeyPlotter">[docs]</a>
 <span class="k">class</span> <span class="nc">HotkeyPlotter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is for checking the hotkeys and creating a plot for all the available hotkeys to give an</span>
+<span class="sd">    overview to the user. The user can instantly see all the available hotkeys and also to check if there</span>
+<span class="sd">    are some duplicated hotkeys, which should be avoided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="HotkeyPlotter.__init__">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.HotkeyPlotter.__init__">[docs]</a>
@@ -906,6 +1009,9 @@
 
 
     <span class="k">def</span> <span class="nf">_check_for_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered_pairs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finding duplicates within a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ordered_pairs</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
@@ -915,7 +1021,9 @@
         <span class="k">return</span> <span class="n">d</span>
 
     <span class="k">def</span> <span class="nf">_make_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
-
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Making the plot more visible for the user with colors. Duplicated values are marked as red for example.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Duplicates&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Duplicated key&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">colormap</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
         <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;File&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;settings.json&quot;</span><span class="p">:</span>
@@ -926,6 +1034,10 @@
             <span class="k">return</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">colormap</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
 
     <span class="k">def</span> <span class="nf">_load_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loading all the json files and adding them to a DataFrame. Also checking the duplicates.</span>
+<span class="sd">        Is needed for plotting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">object_pairs_hook</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_for_duplicates</span><span class="p">)</span>
@@ -941,6 +1053,9 @@
         <span class="k">return</span> <span class="n">df</span>
 
     <span class="k">def</span> <span class="nf">_plot_hotkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creating the plot of hotkeys named as Hotkeys.png within the application folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_colors</span><span class="p">(</span><span class="n">row</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Duplicates&quot;</span><span class="p">])</span>
 
@@ -970,6 +1085,10 @@
 <div class="viewcode-block" id="HotkeyPlotter.load_and_plot">
 <a class="viewcode-back" href="../video_labeler.html#video_labeler.HotkeyPlotter.load_and_plot">[docs]</a>
     <span class="k">def</span> <span class="nf">load_and_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The whole process from loading until plotting the hotkeys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_files</span><span class="p">(</span><span class="s2">&quot;label_shortcuts.json&quot;</span><span class="p">)</span>
         <span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_files</span><span class="p">(</span><span class="s2">&quot;settings.json&quot;</span><span class="p">)</span>
         <span class="n">label_shortcuts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_files</span><span class="p">(</span><span class="s2">&quot;commands_mpv.json&quot;</span><span class="p">)</span>

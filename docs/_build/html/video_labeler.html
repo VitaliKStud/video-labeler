@@ -61,6 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.delete_selected_rows"><code class="docutils literal notranslate"><span class="pre">AppFunctions.delete_selected_rows()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.load_csv_data"><code class="docutils literal notranslate"><span class="pre">AppFunctions.load_csv_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.plot_hotkeys"><code class="docutils literal notranslate"><span class="pre">AppFunctions.plot_hotkeys()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.save_csv"><code class="docutils literal notranslate"><span class="pre">AppFunctions.save_csv()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.sort_data_table"><code class="docutils literal notranslate"><span class="pre">AppFunctions.sort_data_table()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.update_video_table"><code class="docutils literal notranslate"><span class="pre">AppFunctions.update_video_table()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.AppFunctions.write_csv_data"><code class="docutils literal notranslate"><span class="pre">AppFunctions.write_csv_data()</span></code></a></li>
@@ -94,6 +95,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#video_labeler.Logger"><code class="docutils literal notranslate"><span class="pre">Logger</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.Logger.__init__"><code class="docutils literal notranslate"><span class="pre">Logger.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#video_labeler.Logger.append_logging"><code class="docutils literal notranslate"><span class="pre">Logger.append_logging()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.Logger.get_logging_idx"><code class="docutils literal notranslate"><span class="pre">Logger.get_logging_idx()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.Logger.write_logger"><code class="docutils literal notranslate"><span class="pre">Logger.write_logger()</span></code></a></li>
 </ul>
@@ -102,8 +104,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.__init__"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.close_app"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.close_app()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.data_table_click"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.data_table_click()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.slider_move"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.slider_move()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.splitter_click"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.splitter_click()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.splitter_move"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.splitter_move()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#video_labeler.MouseEventHandler.video_table_click"><code class="docutils literal notranslate"><span class="pre">MouseEventHandler.video_table_click()</span></code></a></li>
 </ul>
 </li>
@@ -156,7 +158,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.ActivityHandler.populate_data_table_time_window">
 <span class="sig-name descname"><span class="pre">populate_data_table_time_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shortcut_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#ActivityHandler.populate_data_table_time_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.ActivityHandler.populate_data_table_time_window" title="Link to this definition"></a></dt>
-<dd><p>As described in _handle_shortcuts() above, this function will handle time_window option. (writing twice)</p>
+<dd><p>As described in _handle_shortcuts() above, this function will handle time_window option. (writing twice)
+It checks if it is first time pressed or second time pressed for the time_window activity.</p>
 </dd></dl>
 
 </dd></dl>
@@ -165,8 +168,8 @@
 <dt class="sig sig-object py" id="video_labeler.AppFunctions">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">video_labeler.</span></span><span class="sig-name descname"><span class="pre">AppFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeler_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#video_labeler.Labeler" title="video_labeler.Labeler"><span class="pre">Labeler</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#AppFunctions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.AppFunctions" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A helper class for handling all the events of Labeler class.
-Everything that happens with Mouse-Clicks is an Event in this case.</p>
+<p>This class gives some functionality to the app. Every function can also be accessed within settings.py and
+bind to a shortcut.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.AppFunctions.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeler_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#video_labeler.Labeler" title="video_labeler.Labeler"><span class="pre">Labeler</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#AppFunctions.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.AppFunctions.__init__" title="Link to this definition"></a></dt>
@@ -181,12 +184,23 @@ Everything that happens with Mouse-Clicks is an Event in this case.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.AppFunctions.load_csv_data">
 <span class="sig-name descname"><span class="pre">load_csv_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#AppFunctions.load_csv_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.AppFunctions.load_csv_data" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>If there are any safed files for the loaded video. It will open the csv file and convert it into the
+data_table. So you can switch between videos and still have the actual data.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.AppFunctions.plot_hotkeys">
 <span class="sig-name descname"><span class="pre">plot_hotkeys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#AppFunctions.plot_hotkeys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.AppFunctions.plot_hotkeys" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>To get access to plot hotkeys within settings.json. Important to know here. It will also open the plotted
+hotkeys and write it into the logger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="video_labeler.AppFunctions.save_csv">
+<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#AppFunctions.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.AppFunctions.save_csv" title="Link to this definition"></a></dt>
+<dd><p>Is needed to hard-save the csv file. It saves the csv file even the table is not changed. Where write_csv_data()
+checks if the data_table was changed or not.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.AppFunctions.sort_data_table">
@@ -204,7 +218,8 @@ Disable edits for column 0 (Video).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.AppFunctions.write_csv_data">
 <span class="sig-name descname"><span class="pre">write_csv_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#AppFunctions.write_csv_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.AppFunctions.write_csv_data" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Will write the data to csv. Loading the values from data_table and saving the video_name.csv.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -212,6 +227,9 @@ Disable edits for column 0 (Video).</p>
 <dt class="sig sig-object py" id="video_labeler.HotkeyPlotter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">video_labeler.</span></span><span class="sig-name descname"><span class="pre">HotkeyPlotter</span></span><a class="reference internal" href="_modules/video_labeler.html#HotkeyPlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.HotkeyPlotter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is for checking the hotkeys and creating a plot for all the available hotkeys to give an
+overview to the user. The user can instantly see all the available hotkeys and also to check if there
+are some duplicated hotkeys, which should be avoided.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.HotkeyPlotter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#HotkeyPlotter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.HotkeyPlotter.__init__" title="Link to this definition"></a></dt>
@@ -220,7 +238,8 @@ Disable edits for column 0 (Video).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.HotkeyPlotter.load_and_plot">
 <span class="sig-name descname"><span class="pre">load_and_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#HotkeyPlotter.load_and_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.HotkeyPlotter.load_and_plot" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The whole process from loading until plotting the hotkeys.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -228,6 +247,16 @@ Disable edits for column 0 (Video).</p>
 <dt class="sig sig-object py" id="video_labeler.Labeler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">video_labeler.</span></span><span class="sig-name descname"><span class="pre">Labeler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Labeler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Labeler" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>This is the “main” class for the application. It brings everything together. Also loading
+classes:</p>
+<ul class="simple">
+<li><p>MouseEventHandler() as mouse_event</p></li>
+<li><p>Layout() as layout</p></li>
+<li><p>AppFunctions() as app_functions</p></li>
+<li><p>Logger() as logger</p></li>
+<li><p>ActivityHandler() as activity_handler</p></li>
+</ul>
+<p>Everything is set up here. Also loading the .json files and processing and binding them.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.Labeler.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">application</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Labeler.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Labeler.__init__" title="Link to this definition"></a></dt>
@@ -267,6 +296,8 @@ Like the size of the window, or some other hotkeys etc.</p>
 <dt class="sig sig-object py" id="video_labeler.Layout">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">video_labeler.</span></span><span class="sig-name descname"><span class="pre">Layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeler_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#video_labeler.Labeler" title="video_labeler.Labeler"><span class="pre">Labeler</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Layout" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is for creating the app-layout of the widgets. No functionality, only widgets. If it’s needed to
+insert more widgets, should be done here. And can be accessed within Labeler class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.Layout.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeler_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#video_labeler.Labeler" title="video_labeler.Labeler"><span class="pre">Labeler</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Layout.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Layout.__init__" title="Link to this definition"></a></dt>
@@ -334,10 +365,20 @@ So the user can drag the windows to the size he wants to.</p>
 <dt class="sig sig-object py" id="video_labeler.Logger">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">video_labeler.</span></span><span class="sig-name descname"><span class="pre">Logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeler_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#video_labeler.Labeler" title="video_labeler.Labeler"><span class="pre">Labeler</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Logger" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is creating some logging to inform the user what happens. The most important cases are
+handled here and will be written into the Logging window within the app.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.Logger.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeler_instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#video_labeler.Labeler" title="video_labeler.Labeler"><span class="pre">Labeler</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Logger.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Logger.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="video_labeler.Logger.append_logging">
+<span class="sig-name descname"><span class="pre">append_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logg_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Information'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bg_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#333333'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#333333'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_if_tracked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Logger.append_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Logger.append_logging" title="Link to this definition"></a></dt>
+<dd><p>Easier way to append the logging activity. More understandable.
+Set ignore_if_tracked as True if you want to show it only once or if it already in the logging window.
+Then it won’t display.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.Logger.get_logging_idx">
@@ -349,7 +390,16 @@ the list, else it returns None.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="video_labeler.Logger.write_logger">
 <span class="sig-name descname"><span class="pre">write_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#Logger.write_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.Logger.write_logger" title="Link to this definition"></a></dt>
-<dd><p>Create Labels as a logging window within the GUI.</p>
+<dd><p>Create Labels as a logging window within the GUI. Use “Information” as the first value within
+the logging_activity list. Just append this list somewhere with three values. or just use
+append_logging() instead of self.logging_activity.append(). Both ways are fine.</p>
+<section id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>self.logging_activity.append([“Information”,
+“The data is saved to .csv”,
+“Check documentation for more Information”])
+self.logger.write_logger() # Will write the appended logging</p>
+</section>
 </dd></dl>
 
 </dd></dl>
@@ -380,17 +430,17 @@ video with the StartTime. If EndTime, it will go there. If something else. It wi
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="video_labeler.MouseEventHandler.splitter_click">
-<span class="sig-name descname"><span class="pre">splitter_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#MouseEventHandler.splitter_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.MouseEventHandler.splitter_click" title="Link to this definition"></a></dt>
-<dd><p>Update the sizes of widgets based on the size of the first element in the splitter.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="video_labeler.MouseEventHandler.splitter_move">
-<span class="sig-name descname"><span class="pre">splitter_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#MouseEventHandler.splitter_move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.MouseEventHandler.splitter_move" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="video_labeler.MouseEventHandler.slider_move">
+<span class="sig-name descname"><span class="pre">slider_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#MouseEventHandler.slider_move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.MouseEventHandler.slider_move" title="Link to this definition"></a></dt>
 <dd><p>Handling the slider mouse press event. So it acts like a normal slider for a video.
 For example, you can add self.player.pause = False at the end, and it will play the video
 after releasing the mouse. So some settings for the slider can be done here.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="video_labeler.MouseEventHandler.splitter_click">
+<span class="sig-name descname"><span class="pre">splitter_click</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/video_labeler.html#MouseEventHandler.splitter_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#video_labeler.MouseEventHandler.splitter_click" title="Link to this definition"></a></dt>
+<dd><p>Update the sizes of widgets based on the size of the first element in the splitter.</p>
 </dd></dl>
 
 <dl class="py method">
