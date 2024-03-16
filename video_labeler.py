@@ -36,7 +36,7 @@ class Labeler(QMainWindow):
     - Logger() as logger
     - ActivityHandler() as activity_handler
 
-    Everything is set up here. Also loading the .json files and processing and binding them.
+    Everything is set up here. Also loading the .json files and processing and binding them.a
     """
 
     def __init__(self, application, parent=None):
