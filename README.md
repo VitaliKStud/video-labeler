@@ -2,7 +2,7 @@ Check the mpv_player.zip file. Insert it into your python environment\\Script.
 
 It should looks following:
 
-<img src="./docs/mpv_to_script.png">
+<img src="./docs/_example_images/mpv_to_script.png">
 
 It is also possible just to download the mpv-player files:
 
@@ -19,7 +19,7 @@ The idea behind the video-labeler is to tag time-window and point-activities.
 - Point-Activity: happens at a single point on a timeline  (....<r>TAG</r>......<r>TAG</r>.....)
 - Time-Window: happens between two point on a timeline (...<r>FIRST_TAG.....SECOND_TAG</r>......)
 
-<img src="./docs/example.png">
+<img src="./docs/_example_images/example.png">
 
 
 ### Requirements
@@ -226,7 +226,7 @@ the folder "videos" probably you will need this function.
 - sort_data_table() sorts all the values within the data_table by "STIME"
 
 plot_hotkeys()
-<img src="docs/Hotkeys.png">
+<img src="docs/_example_images/Hotkeys.png">
 
 
 **EXAMPLE**

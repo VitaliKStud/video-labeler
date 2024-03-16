@@ -9,7 +9,6 @@ Welcome to Dashboard Layout's documentation!
 .. toctree::
    :caption: Contents:
 
-   overview
    video_labeler
 
 Indices and tables

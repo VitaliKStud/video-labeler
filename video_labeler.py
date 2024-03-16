@@ -27,8 +27,16 @@ from typing import Iterator, List
 
 class Labeler(QMainWindow):
     """
+    This is the "main" class for the application. It brings everything together. Also loading
+    classes:
 
+    - MouseEventHandler() as mouse_event
+    - Layout() as layout
+    - AppFunctions() as app_functions
+    - Logger() as logger
+    - ActivityHandler() as activity_handler
 
+    Everything is set up here. Also loading the .json files and processing and binding them.a
     """
 
     def __init__(self, application, parent=None):
@@ -45,7 +53,7 @@ class Labeler(QMainWindow):
 
         # Cached values
         self.time_window_activity = []
-        self.data_table_changed = False # Needed for saving data, if some changes happened
+        self.data_table_changed = False  # Needed for saving data, if some changes happened
 
         self.playtime = self.layout.playtime  #
         self.video_name_playing = self.layout.now_playing  # Showing name of Video
@@ -71,8 +79,8 @@ class Labeler(QMainWindow):
 
         # Define Time Slider
         self.time_slider = self.layout.time_slider
-        self.time_slider.mousePressEvent = self.mouse_event.splitter_move
-        self.time_slider.mouseMoveEvent = self.mouse_event.splitter_move
+        self.time_slider.mousePressEvent = self.mouse_event.slider_move
+        self.time_slider.mouseMoveEvent = self.mouse_event.slider_move
 
         # Define Logger
         self.logger_widget = self.layout.logger_widget
@@ -225,6 +233,11 @@ class ActivityHandler:
         self.labeler.logger.write_logger()
 
     def _handle_second_time_window(self, data: list, shortcut_keys: str, activity: list, act_idx: int):
+        """
+        Handling the second time shortcut-pressed key for time_window activities. It is important to know,
+        that "WAIT..." means, it is waiting for the second time to be pressed. So a time_window should be always
+        closed and got StartTime and EndTime.
+        """
         self.labeler.data_table.setItem(activity[0], activity[1],
                                         QTableWidgetItem(data[1]))
         self.labeler.time_window_activity.pop(act_idx)
@@ -240,6 +253,7 @@ class ActivityHandler:
     def populate_data_table_time_window(self, data: list, shortcut_keys: str):
         """
         As described in _handle_shortcuts() above, this function will handle time_window option. (writing twice)
+        It checks if it is first time pressed or second time pressed for the time_window activity.
         """
         self.labeler.data_table_changed = True
         act = self._get_saved_time_window(shortcut_keys)
@@ -267,6 +281,11 @@ class ActivityHandler:
 
 
 class Layout:
+    """
+    This class is for creating the app-layout of the widgets. No functionality, only widgets. If it's needed to
+    insert more widgets, should be done here. And can be accessed within Labeler class.
+    """
+
     def __init__(self, labeler_instance: Labeler):
         self.labeler = labeler_instance
         self.playtime = QLabel("0")
@@ -423,8 +442,8 @@ class Layout:
 
 class AppFunctions:
     """
-    A helper class for handling all the events of Labeler class.
-    Everything that happens with Mouse-Clicks is an Event in this case.
+    This class gives some functionality to the app. Every function can also be accessed within settings.py and
+    bind to a shortcut.
     """
 
     def __init__(self, labeler_instance: Labeler):
@@ -451,6 +470,9 @@ class AppFunctions:
         self.labeler.data_table_changed = True
 
     def write_csv_data(self):
+        """
+        Will write the data to csv. Loading the values from data_table and saving the video_name.csv.
+        """
         video_name_csv = self.labeler.video_name_playing.text()
         video_name_csv = "_".join(video_name_csv.split(".")[:-1])
         video_name_csv = video_name_csv.replace(" ", "_")
@@ -465,10 +487,17 @@ class AppFunctions:
             self.labeler.data_table_changed = False
 
     def save_csv(self):
+        """
+        Is needed to hard-save the csv file. It saves the csv file even the table is not changed. Where write_csv_data()
+        checks if the data_table was changed or not.
+        """
         self.labeler.data_table_changed = True
         self.write_csv_data()
 
     def _csv_write_rows(self, csvwriter: csv.writer):
+        """
+        Helper to write the rows to the csv file
+        """
         for data_table_row in range(self.labeler.data_table.rowCount()):
             row_data = []
             for column in range(self.labeler.data_table.columnCount()):
@@ -480,6 +509,10 @@ class AppFunctions:
             csvwriter.writerow(row_data)
 
     def load_csv_data(self):
+        """
+        If there are any safed files for the loaded video. It will open the csv file and convert it into the
+        data_table. So you can switch between videos and still have the actual data.
+        """
         row = self.labeler.video_table.currentRow()
         video_name = self.labeler.video_table.item(row, 0).text()
         video_name_csv = "_".join(video_name.split(".")[:-1])
@@ -495,6 +528,9 @@ class AppFunctions:
             self.labeler.data_table.setRowCount(0)  # Clear existing rows
 
     def _csv_load_rows(self, csvreader: Iterator[List[str]]):
+        """
+        Helper to load the rows from the csv file.
+        """
         self.labeler.data_table.setRowCount(0)  # Clear existing rows
         for row_data in csvreader:
             row = self.labeler.data_table.rowCount()
@@ -517,6 +553,10 @@ class AppFunctions:
             self.labeler.video_table.setItem(current_row_count, 0, QTableWidgetItem(video))
 
     def plot_hotkeys(self):
+        """
+        To get access to plot hotkeys within settings.json. Important to know here. It will also open the plotted
+        hotkeys and write it into the logger.
+        """
         HotkeyPlotter().load_and_plot()
         os.startfile("Hotkeys.png")
         self.labeler.logger.logging_activity.append(["Saved",
@@ -599,7 +639,7 @@ class MouseEventHandler:
         self.labeler.observe_time_position()
         self.labeler.video_name_playing.setText(video_name)
 
-    def splitter_move(self, event):
+    def slider_move(self, event):
         """
         Handling the slider mouse press event. So it acts like a normal slider for a video.
         For example, you can add self.player.pause = False at the end, and it will play the video
@@ -621,15 +661,14 @@ class MouseEventHandler:
         except Exception as e:
             seek_time = 0
             self.labeler.logger.append_logging(
-                type="Information",
-                text=f"ERROR porbably corrupted VIDEO: {e}",
+                logg_type="Information",
+                text=f"ERROR probably corrupted VIDEO: {e}",
                 bg_color="#400000",
                 border_color="#400000",
                 ignore_if_tracked=True
             )
 
         self.labeler.player.command('seek', seek_time, 'absolute')
-
 
     def splitter_click(self):
         """
@@ -648,6 +687,11 @@ class MouseEventHandler:
 
 
 class Logger:
+    """
+    This class is creating some logging to inform the user what happens. The most important cases are
+    handled here and will be written into the Logging window within the app.
+    """
+
     def __init__(self, labeler_instance: Labeler):
         self.labeler = labeler_instance
         self.logging_activity = []
@@ -686,7 +730,8 @@ class Logger:
                 self.labeler.logger_grid.removeWidget(widget_item.widget())
 
     def append_logging(self,
-                       type: str = "Information", # "Information", "Saved", "Loaded" possible else is index of data_table
+                       logg_type: str = "Information",
+                       # "Information", "Saved", "Loaded" possible else is index of data_table
                        text: str = "",
                        bg_color: str = "#333333",
                        border_color: str = "#333333",
@@ -695,18 +740,30 @@ class Logger:
                        ):
         """
         Easier way to append the logging activity. More understandable.
+        Set ignore_if_tracked as True if you want to show it only once or if it already in the logging window.
+        Then it won't display.
         """
         if ignore_if_tracked is True:
-            if [type, text, bg_color, border_color, text_2] in self.logging_activity:
+            if [logg_type, text, bg_color, border_color, text_2] in self.logging_activity:
                 pass
             else:
-                self.logging_activity.append([type, text, bg_color, border_color, text_2])
+                self.logging_activity.append([logg_type, text, bg_color, border_color, text_2])
         else:
-            self.logging_activity.append([type, text, bg_color, border_color, text_2])
+            self.logging_activity.append([logg_type, text, bg_color, border_color, text_2])
 
     def write_logger(self):
         """
-        Create Labels as a logging window within the GUI.
+        Create Labels as a logging window within the GUI. Use "Information" as the first value within
+        the logging_activity list. Just append this list somewhere with three values. or just use
+        append_logging() instead of self.logging_activity.append(). Both ways are fine.
+
+        Example:
+        --------
+        self.logging_activity.append(["Information",
+        "The data is saved to .csv",
+        "Check documentation for more Information"])
+        self.logger.write_logger() # Will write the appended logging
+
         """
         # Clearing the layout before reading widgets
         self._clear_logger()
@@ -733,12 +790,20 @@ class Logger:
 
 
 class HotkeyPlotter:
+    """
+    This class is for checking the hotkeys and creating a plot for all the available hotkeys to give an
+    overview to the user. The user can instantly see all the available hotkeys and also to check if there
+    are some duplicated hotkeys, which should be avoided.
+    """
 
     def __init__(self):
         # noinspection PyUnresolvedReferences
         self.colormap = plt.get_cmap("tab10").colors
 
     def _check_for_duplicates(self, ordered_pairs):
+        """
+        Finding duplicates within a dictionary.
+        """
         d = {}
         for k, v in ordered_pairs:
             if k in d:
@@ -748,7 +813,9 @@ class HotkeyPlotter:
         return d
 
     def _make_colors(self, row):
-
+        """
+        Making the plot more visible for the user with colors. Duplicated values are marked as red for example.
+        """
         if row["Duplicates"] is True or row["Value"] == "Duplicated key":
             return 4 * [self.colormap[3]]
         elif row["File"] == "settings.json":
@@ -759,6 +826,10 @@ class HotkeyPlotter:
             return 4 * [self.colormap[2]]
 
     def _load_files(self, json_file):
+        """
+        Loading all the json files and adding them to a DataFrame. Also checking the duplicates.
+        Is needed for plotting.
+        """
         data = []
         with open(json_file, 'r') as file:
             json_data = json.load(file, object_pairs_hook=self._check_for_duplicates)
@@ -774,6 +845,9 @@ class HotkeyPlotter:
         return df
 
     def _plot_hotkeys(self, df):
+        """
+        Creating the plot of hotkeys named as Hotkeys.png within the application folder.
+        """
         colors = df.apply(lambda row: self._make_colors(row), axis=1)
         df = df.drop(columns=["Duplicates"])
 
@@ -801,6 +875,10 @@ class HotkeyPlotter:
         plt.close()
 
     def load_and_plot(self):
+        """
+        The whole process from loading until plotting the hotkeys.
+        """
+
         labels = self._load_files("label_shortcuts.json")
         settings = self._load_files("settings.json")
         label_shortcuts = self._load_files("commands_mpv.json")
