@@ -41,6 +41,7 @@ class Labeler(QMainWindow):
 
     def __init__(self, application, parent=None):
         super().__init__(parent)
+        self.initialize_folders_and_settings()
         self.mouse_event = MouseEventHandler(self)  # Get access to MouseEventHandler
         self.layout = Layout(self)  # Get access to Layout
         self.app_functions = AppFunctions(self)  # Get access to Settings methods
@@ -101,6 +102,64 @@ class Labeler(QMainWindow):
         self.label_shortcuts()
         self.commands_mpv()
         self.settings()
+
+    def initialize_folders_and_settings(self):
+        """
+        Creating and initializing all the needed files. Also auto-creating the settings.json,
+        commands_mpv.json and label_shortcuts.json files as an example.
+        """
+        if not os.path.exists("data"):
+            os.makedirs("data")
+        if not os.path.exists("videos"):
+            os.makedirs("videos")
+        if not os.path.exists('settings.json'):
+            with open('settings.json', 'w') as f:
+                settings = {
+                    "X": "delete_selected_rows()",
+                    "CTRL+S": "save_csv()",
+                    "S": "sort_data_table()",
+                    "U": "update_video_table()",
+                    "P": "plot_hotkeys()",
+                    "dark_amber.xml": "style",
+                    "1600:800": "width_height",
+                    "12": "log_max"
+                }
+                json.dump(settings, f, sort_keys=True, indent=4,
+                          ensure_ascii=False)
+        if not os.path.exists('commands_mpv.json'):
+            with open('commands_mpv.json', 'w') as f:
+                commands_mpv = {
+                    "SPACE": ["cycle", "pause"],
+                    "right": "frame-step",
+                    "left": "frame-back-step",
+                    "up": ["multiply", "speed", "1.1"],
+                    "down": ["multiply", "speed", "1/1.1"],
+                    ".": "frame-step",
+                    ",": "frame-back-step",
+                    "+": ["add", "video-zoom", "0.1"],
+                    "-": ["add", "video-zoom", "-0.1"],
+                    "Shift+up": ["add", "video-pan-y", "0.1"],
+                    "Shift+right": ["add", "video-pan-x", "-0.1"],
+                    "Shift+left": ["add", "video-pan-x", "0.1"],
+                    "Shift+down": ["add", "video-pan-y", "-0.1"],
+                    "BACKSPACE": ["set", "speed", "1.0"]
+                }
+                json.dump(commands_mpv, f, sort_keys=True, indent=4,
+                          ensure_ascii=False)
+        if not os.path.exists('label_shortcuts.json'):
+            with open('label_shortcuts.json', 'w') as f:
+                label_shortcuts = {
+                    "time_window": {
+                        "Ctrl+R": "Running",
+                        "Ctrl+W": "Walking"
+                    },
+                    "point_activity": {
+                        "L": "StepLeft",
+                        "R": "StepRight"
+                    }
+                }
+                json.dump(label_shortcuts, f, sort_keys=True, indent=4,
+                          ensure_ascii=False)
 
     def commands_mpv(self):
         """
