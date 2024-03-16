@@ -45,7 +45,7 @@ class Labeler(QMainWindow):
 
         # Cached values
         self.time_window_activity = []
-        self.data_table_changed = False  # Needed for saving data, if some changes happened
+        self.data_table_changed = False # Needed for saving data, if some changes happened
 
         self.playtime = self.layout.playtime  #
         self.video_name_playing = self.layout.now_playing  # Showing name of Video
@@ -199,7 +199,6 @@ class Labeler(QMainWindow):
 class ActivityHandler:
     def __init__(self, labeler_instance: Labeler):
         self.labeler = labeler_instance
-        self.data_table_changed = False
 
     def _get_saved_time_window(self, shortcut_keys: str) -> tuple or None:
         """
@@ -242,7 +241,7 @@ class ActivityHandler:
         """
         As described in _handle_shortcuts() above, this function will handle time_window option. (writing twice)
         """
-        self.data_table_changed = True
+        self.labeler.data_table_changed = True
         act = self._get_saved_time_window(shortcut_keys)
         if act is None:
             data[1] = "WAIT..."
@@ -257,7 +256,7 @@ class ActivityHandler:
         """
         Handling point activity (writing once)
         """
-        self.data_table_changed = True
+        self.labeler.data_table_changed = True
         current_row_count = self.labeler.data_table.rowCount()
         self.labeler.data_table.setRowCount(current_row_count + 1)
         for j, item in enumerate(data):
@@ -551,7 +550,7 @@ class MouseEventHandler:
             if reply == QMessageBox.Save:
                 video_name_csv = self.labeler.video_name_playing.text()
                 if video_name_csv != "No Video Playing":
-                    self.labeler.app_functions.write_csv_data()
+                    self.labeler.app_functions.save_csv()
                 event.accept()  # Close the window
             elif reply == QMessageBox.Discard:
                 event.accept()  # Close the window
